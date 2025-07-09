@@ -8,6 +8,8 @@
   import Culture from './components/Culture.svelte';
   import Observatory from './components/Observatory.svelte';
   import Globe from './components/Globe.svelte';
+  import GlobeOpenGlobus from './components/GlobeOpenGlobus.svelte';
+  import GlobeGeoJSON from './components/GlobeGeoJSON.svelte';
   import Footer from './components/Footer.svelte';
   
   let scrollY = 0;
@@ -46,6 +48,8 @@
   <Culture />
   <Observatory />
   <Globe />
+  <GlobeOpenGlobus />
+  <GlobeGeoJSON />
 </main>
 
 <Footer />

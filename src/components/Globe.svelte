@@ -319,9 +319,9 @@
 <section id="globe-section" class="globe-section">
   <div class="container">
     <div class="section-header" class:visible>
-      <h2>La Vague Planétaire de Sirius</h2>
+      <h2>Globe Original (Canvas simple)</h2>
       <p class="section-subtitle">
-        Le lever héliaque progresse d'Est en Ouest à travers le monde
+        Version actuelle avec formes simplifiées
       </p>
     </div>
     

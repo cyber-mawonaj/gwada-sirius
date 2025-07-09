@@ -1,0 +1,217 @@
+<script>
+  import { onMount } from 'svelte';
+  
+  let container;
+  let visible = false;
+  let globeInstance;
+  
+  onMount(async () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !globeInstance) {
+          visible = true;
+          initGlobe();
+        }
+      });
+    });
+    
+    const section = document.getElementById('openglobus-section');
+    if (section) observer.observe(section);
+    
+    return () => {
+      observer.disconnect();
+      if (globeInstance) {
+        globeInstance.destroy();
+      }
+    };
+  });
+  
+  async function initGlobe() {
+    // Charger OpenGlobus depuis CDN
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@openglobus/og@0.10.0/dist/og.umd.js';
+    script.onload = () => {
+      const { Globe, XYZ, Vector, Entity, Label } = window.og;
+      
+      // Créer le globe
+      globeInstance = new Globe({
+        target: container,
+        name: "Earth",
+        terrain: null,
+        layers: [
+          new XYZ("OSM", {
+            url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            visibility: true,
+            attribution: 'OpenStreetMap'
+          })
+        ]
+      });
+      
+      // Données des lieux
+      const locations = [
+        { name: 'La Réunion', lat: -21.1151, lon: 55.5364, date: '27 Juin', color: '#FF6B35' },
+        { name: 'Kinshasa', lat: -4.4419, lon: 15.2663, date: '16 Juillet', color: '#FFA500' },
+        { name: 'Guadeloupe', lat: 16.2650, lon: -61.5510, date: '22 Juillet', color: '#FFD700' },
+        { name: 'Martinique', lat: 14.6415, lon: -61.0242, date: '23 Juillet', color: '#FFD700' },
+        { name: 'Dakar', lat: 14.7167, lon: -17.4677, date: '23 Juillet', color: '#FFE44D' },
+        { name: 'Le Caire', lat: 30.0444, lon: 31.2357, date: '3 Août', color: '#FFFACD' }
+      ];
+      
+      // Ajouter une couche de vecteurs pour les marqueurs
+      const markerLayer = new Vector("Markers", {
+        entities: locations.map(loc => new Entity({
+          name: loc.name,
+          lonlat: [loc.lon, loc.lat],
+          label: {
+            text: `${loc.name}\n${loc.date}`,
+            outline: 0.77,
+            outlineColor: "rgba(0,0,0,.75)",
+            size: 14,
+            color: "white",
+            offset: [0, -35]
+          },
+          billboard: {
+            src: createMarkerCanvas(loc.color),
+            width: 32,
+            height: 32,
+            offset: [0, -16]
+          }
+        }))
+      });
+      
+      globeInstance.planet.addLayer(markerLayer);
+      
+      // Positionner la vue sur l'Atlantique
+      globeInstance.planet.viewExtentArr([-80, -30, 50, 50]);
+      
+      // Rotation automatique
+      let autoRotate = setInterval(() => {
+        if (globeInstance && globeInstance.planet) {
+          const cam = globeInstance.planet.camera;
+          cam.rotateHorizontal(0.2);
+        }
+      }, 50);
+      
+      // Nettoyage
+      container.addEventListener('mousedown', () => {
+        clearInterval(autoRotate);
+      });
+    };
+    
+    document.head.appendChild(script);
+  }
+  
+  function createMarkerCanvas(color) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 32;
+    canvas.height = 32;
+    const ctx = canvas.getContext('2d');
+    
+    // Cercle avec couleur
+    ctx.beginPath();
+    ctx.arc(16, 16, 12, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    // Point central
+    ctx.beginPath();
+    ctx.arc(16, 16, 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+    
+    return canvas.toDataURL();
+  }
+</script>
+
+<section id="openglobus-section" class="globe-section">
+  <div class="container">
+    <div class="section-header" class:visible>
+      <h2>Globe avec OpenGlobus</h2>
+      <p class="section-subtitle">
+        Bibliothèque 3D professionnelle avec textures réalistes
+      </p>
+    </div>
+    
+    <div class="globe-container openglobus" class:visible>
+      <div bind:this={container} class="openglobus-container"></div>
+      
+      <div class="globe-info">
+        <div class="info-card card">
+          <h3>OpenGlobus</h3>
+          <p><strong>Avantages :</strong></p>
+          <ul>
+            <li>✅ Textures satellite réalistes</li>
+            <li>✅ Performance WebGL optimisée</li>
+            <li>✅ Zoom et navigation fluides</li>
+            <li>✅ Support natif des marqueurs</li>
+          </ul>
+          <p><strong>Inconvénients :</strong></p>
+          <ul>
+            <li>❌ Plus lourd (~500KB)</li>
+            <li>❌ Nécessite connexion internet pour les tuiles</li>
+            <li>❌ Personnalisation plus complexe</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .globe-section {
+    padding: var(--spacing-xl) 0;
+    background: var(--gradient-dawn);
+  }
+  
+  .globe-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    align-items: center;
+    margin-top: var(--spacing-lg);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out 0.3s;
+  }
+  
+  .globe-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .openglobus-container {
+    width: 100%;
+    height: 500px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  }
+  
+  .info-card h3 {
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+  }
+  
+  .info-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+  }
+  
+  .info-card li {
+    padding: 0.25rem 0;
+  }
+  
+  @media (max-width: 768px) {
+    .globe-container {
+      grid-template-columns: 1fr;
+    }
+    
+    .openglobus-container {
+      height: 400px;
+    }
+  }
+</style>
