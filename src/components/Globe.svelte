@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { worldData } from '../data/world.js';
   
   let canvas;
   let visible = false;
@@ -84,7 +85,7 @@
     canvas.addEventListener('touchmove', (e) => {
       if (isDragging && e.touches.length === 1) {
         const deltaX = e.touches[0].clientX - lastMouseX;
-        rotation += deltaX * 0.01; // Retour au + pour le tactile
+        rotation -= deltaX * 0.01; // Garder le - pour le tactile aussi
         lastMouseX = e.touches[0].clientX;
         e.preventDefault();
       }
@@ -242,7 +243,7 @@
       // Dessiner les points et la vague
       locations.forEach((loc, i) => {
         const phi = (90 - loc.lat) * Math.PI / 180;
-        const theta = (loc.lon - rotation * 57.3) * Math.PI / 180;
+        const theta = (-loc.lon - rotation * 57.3) * Math.PI / 180; // Remettre le - devant loc.lon
         
         const x = currentRadius * Math.sin(phi) * Math.cos(theta);
         const y = currentRadius * Math.cos(phi);
