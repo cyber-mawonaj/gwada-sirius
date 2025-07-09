@@ -84,7 +84,7 @@
     canvas.addEventListener('touchmove', (e) => {
       if (isDragging && e.touches.length === 1) {
         const deltaX = e.touches[0].clientX - lastMouseX;
-        rotation -= deltaX * 0.01;
+        rotation += deltaX * 0.01; // Retour au + pour le tactile
         lastMouseX = e.touches[0].clientX;
         e.preventDefault();
       }
