@@ -91,8 +91,6 @@
     gap: var(--spacing-lg);
     margin-bottom: var(--spacing-lg);
   }
-    font-size: 1.5rem;
-  }
   
   .countdown {
     display: flex;
@@ -128,6 +126,13 @@
     font-style: italic;
     color: var(--color-primary);
     opacity: 0.8;
+  }
+  
+  .social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    font-size: 1.5rem;
   }
   
   @media (max-width: 768px) {

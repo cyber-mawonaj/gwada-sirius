@@ -42,14 +42,20 @@
   
   <div class="container">
     <div class="section-header" class:visible>
-      <h2>Sirius, Wep Ronpet</h2>
+      <h2>Sirius et Wep Ronpet</h2>
       <p class="section-subtitle">
-        Le Nouvel An Cosmique des Anciens
+        L'Ouverture de l'Année - Le Nouvel An Cosmique des Anciens Égyptiens
       </p>
     </div>
     
     <div class="about-content" class:visible>
       <div class="about-text">
+        <p>
+          <strong>Wep Ronpet</strong> - "l'Ouverture de l'Année" en égyptien ancien - 
+          marquait le jour le plus sacré du calendrier égyptien. Ce jour correspondait 
+          au lever héliaque de Sirius, quand l'étoile réapparaissait à l'aube après 
+          70 jours d'invisibilité.
+        </p>
         <p>
           Le lever héliaque de Sirius n'est pas qu'un simple phénomène astronomique. 
           C'est un rendez-vous millénaire entre l'humanité et le cosmos, un moment où 

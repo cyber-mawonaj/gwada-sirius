@@ -83,7 +83,10 @@
           <span class="title-line">en Guadeloupe</span>
         </h1>
         <p class="hero-subtitle">
-          Le rendez-vous cosmique entre Ciel, Science et Culture
+          Wep Ronpet - L'Ouverture de l'Année Cosmique
+        </p>
+        <p class="hero-description">
+          Le rendez-vous millénaire entre Ciel, Science et Culture
         </p>
         <p class="hero-date">
           Lever héliaque : <strong>22 Juillet 2025</strong>
@@ -171,8 +174,17 @@
   .hero-subtitle {
     font-size: clamp(1.2rem, 3vw, 1.5rem);
     color: var(--color-primary);
-    margin-bottom: 1rem;
+    font-family: var(--font-heading);
+    margin-bottom: 0.5rem;
     animation: fadeInUp 1s ease-out 0.4s;
+    animation-fill-mode: both;
+  }
+  
+  .hero-description {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: var(--color-light);
+    margin-bottom: 1rem;
+    animation: fadeInUp 1s ease-out 0.5s;
     animation-fill-mode: both;
   }
   
