@@ -66,7 +66,7 @@
     window.addEventListener('mousemove', (e) => {
       if (isDragging) {
         const deltaX = e.clientX - lastMouseX;
-        rotation -= deltaX * 0.01; // Inverser pour tourner dans le bon sens
+        rotation += deltaX * 0.01; // Retour au + pour inverser la rotation
         lastMouseX = e.clientX;
       }
     });
@@ -84,7 +84,7 @@
     canvas.addEventListener('touchmove', (e) => {
       if (isDragging && e.touches.length === 1) {
         const deltaX = e.touches[0].clientX - lastMouseX;
-        rotation -= deltaX * 0.01;
+        rotation += deltaX * 0.01; // Retour au + pour le tactile aussi
         lastMouseX = e.touches[0].clientX;
         e.preventDefault();
       }
@@ -97,29 +97,56 @@
     // Dessiner les continents simplifiés
     function drawContinents(ctx, centerX, centerY, radius, rotation) {
       ctx.save();
-      ctx.globalAlpha = 0.3;
-      ctx.strokeStyle = '#4a7c59';
-      ctx.fillStyle = '#2d5f3f';
-      ctx.lineWidth = 1;
       
-      // Afrique (très simplifiée)
+      // Style des continents
+      ctx.fillStyle = '#e6d5b8'; // Couleur sable/beige pour les terres
+      ctx.strokeStyle = '#b8a590'; // Contour plus foncé
+      ctx.lineWidth = 0.5;
+      
+      // Afrique
       const africa = [
         {lat: 37, lon: 10}, {lat: 35, lon: -5}, {lat: 30, lon: -17},
-        {lat: 15, lon: -17}, {lat: 5, lon: -10}, {lat: -5, lon: 8},
-        {lat: -15, lon: 15}, {lat: -25, lon: 20}, {lat: -35, lon: 20},
-        {lat: -35, lon: 30}, {lat: -25, lon: 35}, {lat: -10, lon: 40},
-        {lat: 5, lon: 45}, {lat: 15, lon: 45}, {lat: 30, lon: 35}, {lat: 37, lon: 10}
+        {lat: 20, lon: -17}, {lat: 15, lon: -17}, {lat: 10, lon: -15},
+        {lat: 5, lon: -10}, {lat: 0, lon: -5}, {lat: -5, lon: 8},
+        {lat: -10, lon: 12}, {lat: -15, lon: 15}, {lat: -20, lon: 18},
+        {lat: -25, lon: 20}, {lat: -30, lon: 22}, {lat: -35, lon: 20},
+        {lat: -35, lon: 25}, {lat: -35, lon: 30}, {lat: -30, lon: 32},
+        {lat: -25, lon: 35}, {lat: -20, lon: 35}, {lat: -15, lon: 37},
+        {lat: -10, lon: 40}, {lat: -5, lon: 42}, {lat: 0, lon: 43},
+        {lat: 5, lon: 45}, {lat: 10, lon: 47}, {lat: 15, lon: 45},
+        {lat: 20, lon: 40}, {lat: 25, lon: 35}, {lat: 30, lon: 35},
+        {lat: 35, lon: 25}, {lat: 37, lon: 10}
       ];
       drawLandmass(africa);      
-      // Amérique du Sud
+      // Amérique du Sud (plus détaillée)
       const southAmerica = [
-        {lat: 10, lon: -60}, {lat: 5, lon: -50}, {lat: -5, lon: -35},
-        {lat: -15, lon: -38}, {lat: -25, lon: -48}, {lat: -35, lon: -58},
-        {lat: -45, lon: -65}, {lat: -55, lon: -70}, {lat: -45, lon: -73},
-        {lat: -35, lon: -72}, {lat: -25, lon: -70}, {lat: -15, lon: -75},
-        {lat: -5, lon: -78}, {lat: 5, lon: -77}, {lat: 10, lon: -60}
+        {lat: 12, lon: -60}, {lat: 10, lon: -62}, {lat: 8, lon: -60},
+        {lat: 5, lon: -52}, {lat: 0, lon: -50}, {lat: -5, lon: -35},
+        {lat: -8, lon: -35}, {lat: -15, lon: -38}, {lat: -20, lon: -40},
+        {lat: -25, lon: -48}, {lat: -30, lon: -52}, {lat: -35, lon: -58},
+        {lat: -40, lon: -62}, {lat: -45, lon: -65}, {lat: -50, lon: -68},
+        {lat: -55, lon: -70}, {lat: -55, lon: -68}, {lat: -50, lon: -73},
+        {lat: -45, lon: -73}, {lat: -40, lon: -73}, {lat: -35, lon: -72},
+        {lat: -30, lon: -71}, {lat: -25, lon: -70}, {lat: -20, lon: -70},
+        {lat: -15, lon: -75}, {lat: -10, lon: -78}, {lat: -5, lon: -78},
+        {lat: 0, lon: -80}, {lat: 5, lon: -77}, {lat: 8, lon: -75},
+        {lat: 10, lon: -72}, {lat: 12, lon: -70}, {lat: 12, lon: -60}
       ];
-      drawLandmass(southAmerica);
+      drawLandmass(southAmerica, landGradient);
+      
+      // Amérique du Nord
+      const northAmerica = [
+        {lat: 15, lon: -92}, {lat: 20, lon: -97}, {lat: 25, lon: -97},
+        {lat: 30, lon: -95}, {lat: 35, lon: -90}, {lat: 40, lon: -85},
+        {lat: 45, lon: -80}, {lat: 50, lon: -75}, {lat: 55, lon: -70},
+        {lat: 60, lon: -65}, {lat: 65, lon: -65}, {lat: 70, lon: -70},
+        {lat: 70, lon: -90}, {lat: 70, lon: -110}, {lat: 65, lon: -125},
+        {lat: 60, lon: -130}, {lat: 55, lon: -130}, {lat: 50, lon: -125},
+        {lat: 45, lon: -124}, {lat: 40, lon: -124}, {lat: 35, lon: -120},
+        {lat: 30, lon: -115}, {lat: 25, lon: -110}, {lat: 20, lon: -105},
+        {lat: 15, lon: -92}
+      ];
+      drawLandmass(northAmerica, landGradient);
       
       // Europe (simplifiée)
       const europe = [
@@ -130,10 +157,29 @@
       ];
       drawLandmass(europe);
       
+      // Asie
+      const asia = [
+        {lat: 70, lon: 60}, {lat: 65, lon: 90}, {lat: 60, lon: 120},
+        {lat: 50, lon: 130}, {lat: 40, lon: 125}, {lat: 30, lon: 120},
+        {lat: 20, lon: 110}, {lat: 10, lon: 100}, {lat: 0, lon: 100},
+        {lat: 10, lon: 80}, {lat: 20, lon: 70}, {lat: 30, lon: 60},
+        {lat: 40, lon: 50}, {lat: 50, lon: 40}, {lat: 60, lon: 50},
+        {lat: 70, lon: 60}
+      ];
+      drawLandmass(asia);
+      
+      // Australie
+      const australia = [
+        {lat: -10, lon: 130}, {lat: -15, lon: 140}, {lat: -25, lon: 150},
+        {lat: -35, lon: 150}, {lat: -38, lon: 145}, {lat: -35, lon: 135},
+        {lat: -25, lon: 120}, {lat: -15, lon: 125}, {lat: -10, lon: 130}
+      ];
+      drawLandmass(australia);
+      
       function drawLandmass(points) {
         const coords = points.map(p => {
           const phi = (90 - p.lat) * Math.PI / 180;
-          const theta = (p.lon - rotation * 57.3) * Math.PI / 180;
+          const theta = (-p.lon - rotation * 57.3) * Math.PI / 180; // Inverser aussi pour les continents
           
           const x = radius * Math.sin(phi) * Math.cos(theta);
           const y = radius * Math.cos(phi);
@@ -142,16 +188,24 @@
           return { x: centerX + x, y: centerY - y, z: z };
         });        
         // Ne dessiner que si au moins un point est visible
-        if (coords.some(c => c.z > -radius * 0.5)) {
+        const someVisible = coords.some(c => c.z > -radius * 0.3);
+        if (someVisible) {
           ctx.beginPath();
+          let started = false;
           coords.forEach((c, i) => {
-            if (i === 0) ctx.moveTo(c.x, c.y);
-            else ctx.lineTo(c.x, c.y);
+            if (c.z > -radius * 0.3) {
+              if (!started) {
+                ctx.moveTo(c.x, c.y);
+                started = true;
+              } else {
+                ctx.lineTo(c.x, c.y);
+              }
+            }
           });
           ctx.closePath();
-          if (coords[0].z > 0) {
-            ctx.fill();
-          }
+          
+          // Remplir et tracer
+          ctx.fill();
           ctx.stroke();
         }
       }
@@ -164,33 +218,31 @@
       
       const currentRadius = radius * zoom;
       
-      // Océan (fond du globe)
-      const oceanGradient = ctx.createRadialGradient(
-        centerX - currentRadius * 0.3, 
-        centerY - currentRadius * 0.3, 
-        0, 
-        centerX, 
-        centerY, 
-        currentRadius
-      );      oceanGradient.addColorStop(0, '#2c5aa0');
-      oceanGradient.addColorStop(0.7, '#1e3a8a');
-      oceanGradient.addColorStop(1, '#0f172a');
+      // Ombre du globe
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(centerX + 5, centerY + 5, currentRadius, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+      ctx.filter = 'blur(10px)';
+      ctx.fill();
+      ctx.restore();
       
+      // Océan (fond du globe) - style simple
       ctx.beginPath();
       ctx.arc(centerX, centerY, currentRadius, 0, Math.PI * 2);
-      ctx.fillStyle = oceanGradient;
+      ctx.fillStyle = '#87CEEB'; // Sky blue clair
       ctx.fill();
       
       // Grille de méridiens et parallèles
-      ctx.strokeStyle = 'rgba(100, 200, 255, 0.1)';
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.lineWidth = 0.5;
       
       // Méridiens (longitudes)
       for (let lon = -180; lon <= 180; lon += 30) {
         ctx.beginPath();
         for (let lat = -90; lat <= 90; lat += 5) {
           const phi = (90 - lat) * Math.PI / 180;
-          const theta = (lon - rotation * 57.3) * Math.PI / 180;
+          const theta = (-lon - rotation * 57.3) * Math.PI / 180; // Inverser ici aussi
           
           const x = currentRadius * Math.sin(phi) * Math.cos(theta);
           const y = currentRadius * Math.cos(phi);
@@ -210,7 +262,7 @@
         ctx.beginPath();
         for (let lon = -180; lon <= 180; lon += 5) {
           const phi = (90 - lat) * Math.PI / 180;
-          const theta = (lon - rotation * 57.3) * Math.PI / 180;
+          const theta = (-lon - rotation * 57.3) * Math.PI / 180; // Inverser ici aussi
           
           const x = currentRadius * Math.sin(phi) * Math.cos(theta);
           const y = currentRadius * Math.cos(phi);
@@ -232,7 +284,7 @@
       // Bordure du globe
       ctx.beginPath();
       ctx.arc(centerX, centerY, currentRadius, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
+      ctx.strokeStyle = '#000000';
       ctx.lineWidth = 2;
       ctx.stroke();      
       // Dessiner la vague de progression
@@ -242,7 +294,7 @@
       // Dessiner les points et la vague
       locations.forEach((loc, i) => {
         const phi = (90 - loc.lat) * Math.PI / 180;
-        const theta = (loc.lon - rotation * 57.3) * Math.PI / 180;
+        const theta = (-loc.lon - rotation * 57.3) * Math.PI / 180; // Inverser la longitude avec -loc.lon
         
         const x = currentRadius * Math.sin(phi) * Math.cos(theta);
         const y = currentRadius * Math.cos(phi);
@@ -305,7 +357,7 @@
       
       // Rotation automatique lente
       if (!isDragging) {
-        rotation += 0.002;
+        rotation -= 0.002; // Inverser aussi la rotation automatique
       }
       
       requestAnimationFrame(draw);
