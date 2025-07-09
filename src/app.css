@@ -1,0 +1,217 @@
+/* Variables CSS pour le thème panafricain/caribéen */
+:root {
+  /* Couleurs principales inspirées du panafricanisme et des Caraïbes */
+  --color-primary: #FFD700; /* Or - Soleil, Sirius */
+  --color-secondary: #DC143C; /* Rouge profond */
+  --color-tertiary: #228B22; /* Vert forêt */
+  --color-dark: #1a1a2e; /* Bleu nuit profond */
+  --color-light: #f5f5dc; /* Beige clair */
+  --color-accent: #FF6B35; /* Orange corail caribéen */
+  
+  /* Dégradés */
+  --gradient-dawn: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  --gradient-sunrise: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF6B35 100%);
+  --gradient-caribbean: linear-gradient(135deg, #00CED1 0%, #20B2AA 50%, #48D1CC 100%);
+  
+  /* Typographie */
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+  
+  /* Espacements */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 3rem;
+  --spacing-xl: 4rem;
+  
+  /* Animations */
+  --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset et base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-dark);
+  color: var(--color-light);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Patterns géométriques africains en CSS */
+.pattern-kente {
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 215, 0, 0.1) 10px, rgba(255, 215, 0, 0.1) 20px),
+    repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(220, 20, 60, 0.1) 10px, rgba(220, 20, 60, 0.1) 20px);
+}
+
+.pattern-bogolan {
+  background-image: 
+    radial-gradient(circle at 20% 50%, transparent 30%, rgba(255, 215, 0, 0.05) 30%, rgba(255, 215, 0, 0.05) 32%, transparent 32%),
+    radial-gradient(circle at 60% 50%, transparent 30%, rgba(255, 215, 0, 0.05) 30%, rgba(255, 215, 0, 0.05) 32%, transparent 32%),
+    radial-gradient(circle at 40% 80%, transparent 30%, rgba(255, 215, 0, 0.05) 30%, rgba(255, 215, 0, 0.05) 32%, transparent 32%);
+  background-size: 50px 50px;
+}
+
+.pattern-adinkra {
+  background-image: 
+    repeating-conic-gradient(from 45deg at 50% 50%, transparent 0deg, rgba(255, 215, 0, 0.1) 90deg, transparent 90deg, transparent 180deg),
+    repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(34, 139, 34, 0.1) 90deg, transparent 90deg, transparent 180deg);
+  background-size: 40px 40px;
+}
+
+/* Utilités */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-sm);
+}
+
+/* Typographie */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: var(--spacing-sm);
+}
+
+h1 {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  background: var(--gradient-sunrise);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  font-size: clamp(2rem, 6vw, 3rem);
+  color: var(--color-primary);
+}
+
+h3 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+/* Boutons */
+.btn {
+  display: inline-block;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--gradient-sunrise);
+  color: var(--color-dark);
+  text-decoration: none;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Cards */
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 20px;
+  padding: var(--spacing-md);
+  transition: var(--transition-base);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--spacing-xs);
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  h2 {
+    font-size: 2rem;
+  }
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gradient-sunrise);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}

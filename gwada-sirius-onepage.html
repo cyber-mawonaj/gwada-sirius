@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gwada-Sirius : L'Étoile de nos Ancêtres</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --gold: #FFD700;
+            --red: #DC143C;
+            --green: #228B22;
+            --black: #000000;
+            --caribbean-blue: #1E40AF;
+            --sunset-orange: #FF6B35;
+            --deep-purple: #4C1D95;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1E40AF 25%, #DC143C 50%, #228B22 75%, #FFD700 100%);
+            background-size: 400% 400%;
+            animation: panafricanGradient 15s ease infinite;
+        }
+        
+        @keyframes panafricanGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(45deg, #FFD700, #DC143C, #228B22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .star-glow {
+            text-shadow: 0 0 20px #FFD700, 0 0 40px #FFD700, 0 0 60px #FFD700;
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .pulse-gold {
+            animation: pulseGold 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGold {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            50% { box-shadow: 0 0 0 20px rgba(255, 215, 0, 0); }
+        }
+        
+        #globe-container {
+            cursor: grab;
+            background: radial-gradient(circle, rgba(30, 64, 175, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%);
+        }
+        
+        .prediction-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        
+        .prediction-card:hover {
+            border-left-color: #FFD700;
+            transform: translateX(10px);
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .cultural-section {
+            background: linear-gradient(135deg, 
+                rgba(220, 20, 60, 0.1) 0%, 
+                rgba(34, 139, 34, 0.1) 50%, 
+                rgba(255, 215, 0, 0.1) 100%);
+        }
+        
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, #DC143C, #FFD700, #228B22);
+            margin: 4rem 0;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen">
+    <!-- Header Hero -->
+    <header class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div class="relative z-10 text-center px-4">
+            <div class="floating">
+                <h1 class="text-4xl md:text-7xl font-black mb-6 gradient-text">
+                    SIRIUS
+                </h1>
+                <div class="star-glow text-6xl md:text-8xl mb-8">⭐</div>
+            </div>
+            <h2 class="text-xl md:text-3xl mb-4 font-light">
+                L'Étoile de nos Ancêtres
+            </h2>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed mb-8">
+                Depuis l'Égypte antique jusqu'aux Caraïbes, découvrez la danse cosmique de l'étoile la plus brillante du ciel nocturne et son lever héliaque en Guadeloupe.
+            </p>
+            <div class="glass-card rounded-2xl p-6 md:p-8 max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div class="pulse-gold rounded-xl p-4">
+                        <div class="text-3xl md:text-4xl font-black text-yellow-400 mb-2">-1.46</div>
+                        <div class="text-sm md:text-base opacity-90">Magnitude</div>
+                    </div>
+                    <div class="pulse-gold rounded-xl p-4">
+                        <div class="text-3xl md:text-4xl font-black text-red-400 mb-2">22 JUILLET</div>
+                        <div class="text-sm md:text-base opacity-90">Lever en Guadeloupe</div>
+                    </div>
+                    <div class="pulse-gold rounded-xl p-4">
+                        <div class="text-3xl md:text-4xl font-black text-green-400 mb-2">~70</div>
+                        <div class="text-sm md:text-base opacity-90">Jours d'invisibilité</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <div class="w-6 h-10 border-2 border-white rounded-full flex justify-center">
+                <div class="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Prédictions Section -->
+    <section class="py-16 px-4 relative">
+        <div class="section-divider"></div>
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-5xl font-bold text-center mb-12 gradient-text">
+                Prédictions pour la Guadeloupe
+            </h2>
+            
+            <div class="glass-card rounded-2xl p-6 md:p-8 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Site d'observation :</label>
+                        <select id="location-select" class="w-full p-3 bg-black bg-opacity-50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400">
+                            <option value="Pointe des Châteaux">Pointe des Châteaux</option>
+                            <option value="Pointe de la Grande Vigie">Pointe de la Grande Vigie</option>
+                            <option value="Duzer (Sainte-Rose)">Duzer (Sainte-Rose)</option>
+                            <option value="Pointe du Vieux-Fort">Pointe du Vieux-Fort</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Année :</label>
+                        <select id="year-select" class="w-full p-3 bg-black bg-opacity-50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400">
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="prediction-result" class="text-center bg-gradient-to-r from-red-600 via-yellow-500 to-green-600 rounded-xl p-8">
+                    <h3 class="text-2xl font-bold text-black mb-2" id="result-location">Pointe des Châteaux</h3>
+                    <div class="text-5xl font-black text-black mb-2" id="result-date">22 juillet</div>
+                    <div class="text-2xl text-black" id="result-time">vers 05:12</div>
+                    <div class="mt-4 pt-4 border-t border-black border-opacity-30">
+                        <p class="text-sm text-black opacity-80">Fenêtre d'observation :</p>
+                        <p class="font-bold text-lg text-black" id="result-window">20 au 24 Juillet</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="prediction-card glass-card rounded-xl p-6">
+                    <h4 class="font-bold text-yellow-400 mb-2">Équipement nécessaire</h4>
+                    <p class="text-sm opacity-90">Vos yeux suffisent ! Des jumelles peuvent aider dans les lueurs de l'aube.</p>
+                </div>
+                <div class="prediction-card glass-card rounded-xl p-6">
+                    <h4 class="font-bold text-red-400 mb-2">Meilleure direction</h4>
+                    <p class="text-sm opacity-90">Est-Sud-Est, horizon dégagé loin des lumières de la ville.</p>
+                </div>
+                <div class="prediction-card glass-card rounded-xl p-6">
+                    <h4 class="font-bold text-green-400 mb-2">Conseil d'expert</h4>
+                    <p class="text-sm opacity-90">Observez 2 jours avant et après la date prédite pour maximiser vos chances.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Globe 3D Section -->
+    <section class="py-16 px-4">
+        <div class="section-divider"></div>
+        <div class="max-w-6xl mx-auto text-center">
+            <h2 class="text-3xl md:text-5xl font-bold mb-8 gradient-text">
+                La Vague Planétaire de Sirius
+            </h2>
+            <p class="text-lg mb-12 max-w-3xl mx-auto">
+                Découvrez comment le lever héliaque de Sirius se propage comme une vague à travers la planète, 
+                de l'hémisphère Sud vers le Nord, reliant l'Afrique aux Caraïbes.
+            </p>
+            
+            <div class="glass-card rounded-2xl p-8 mb-8">
+                <div id="globe-container" class="w-full h-96 rounded-xl mb-6"></div>
+                <p class="text-sm opacity-80">
+                    Cliquez et glissez pour faire tourner le globe. La vague animée représente la progression du lever héliaque.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-4">🌍 Départ au Sud</h3>
+                    <p class="text-sm opacity-90">
+                        La vague commence dans l'hémisphère Sud car c'est l'hiver austral. 
+                        Les nuits étant plus longues, Sirius apparaît plus tôt (fin juin).
+                    </p>
+                </div>
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-xl font-bold text-red-400 mb-4">🌅 Arrivée au Nord</h3>
+                    <p class="text-sm opacity-90">
+                        En été boréal, les nuits sont plus courtes. Il faut attendre plus longtemps 
+                        pour que Sirius soit visible à l'aube (fin juillet).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cultural Heritage Section -->
+    <section class="py-16 px-4 cultural-section">
+        <div class="section-divider"></div>
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-5xl font-bold text-center mb-12 gradient-text">
+                Héritage Culturel Panafricain
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="glass-card rounded-xl p-8">
+                    <div class="text-4xl mb-4">🏺</div>
+                    <h3 class="text-2xl font-bold text-yellow-400 mb-4">Égypte Antique : Sothis</h3>
+                    <p class="opacity-90 leading-relaxed">
+                        Pour les anciens Égyptiens, le lever héliaque de Sirius (Sothis) était l'événement le plus important de l'année. 
+                        Il annonçait la crue vitale du Nil qui fertilisait les terres. Ce "retour" de l'étoile marquait le Nouvel An 
+                        et symbolisait la renaissance, associée à la déesse Isis.
+                    </p>
+                </div>
+                
+                <div class="glass-card rounded-xl p-8">
+                    <div class="text-4xl mb-4">🌟</div>
+                    <h3 class="text-2xl font-bold text-red-400 mb-4">Dogon du Mali : Po Tolo</h3>
+                    <p class="opacity-90 leading-relaxed">
+                        Le peuple Dogon possède un savoir ancestral stupéfiant sur Sirius, décrivant une compagne invisible, 
+                        "Po Tolo" (Sirius B), qui tourne autour de l'étoile principale en 50 ans. Des connaissances qui correspondent 
+                        précisément aux découvertes modernes astronomiques.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="glass-card rounded-xl p-8 text-center">
+                <h3 class="text-2xl font-bold text-green-400 mb-6">De l'Afrique aux Caraïbes</h3>
+                <p class="text-lg opacity-90 max-w-4xl mx-auto leading-relaxed">
+                    Sirius unit nos territoires caribéens à notre héritage africain. Cette étoile brillante, 
+                    guide des navigateurs et messager des saisons, continue d'éclairer nos îles comme elle 
+                    éclairait nos ancêtres. Observer Sirius en Guadeloupe, c'est participer à une tradition 
+                    millénaire qui traverse les océans et les générations.
+                </p>
+                <div class="mt-8 flex justify-center space-x-8 text-3xl">
+                    <span title="Guadeloupe">🇬🇵</span>
+                    <span title="Martinique">🇲🇶</span>
+                    <span title="Afrique">🌍</span>
+                    <span title="Égypte">🔺</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Understanding Section -->
+    <section class="py-16 px-4">
+        <div class="section-divider"></div>
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-3xl md:text-5xl font-bold text-center mb-12 gradient-text">
+                Comprendre le Phénomène
+            </h2>
+            
+            <div class="glass-card rounded-xl p-8 mb-8">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-yellow-400 mb-4">Arcus Visionis ≈ 9-10°</h3>
+                    <p class="opacity-90">
+                        L'angle clé : la hauteur négative du Soleil sous l'horizon nécessaire pour que Sirius devienne visible à l'aube.
+                    </p>
+                </div>
+                
+                <div class="relative h-32 bg-gradient-to-t from-blue-900 to-blue-600 rounded-lg p-4 mb-8">
+                    <div class="absolute bottom-0 w-full h-px bg-yellow-400"></div>
+                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 text-xs text-yellow-400">HORIZON</div>
+                    <div class="absolute bottom-6 left-1/4 text-2xl animate-pulse">⭐</div>
+                    <div class="absolute bottom-6 right-1/4 text-2xl text-yellow-400">☀️</div>
+                    <div class="absolute top-4 left-1/2 transform -translate-x-1/2 text-xs text-center text-white opacity-80">
+                        Le Soleil doit être à 9-10° sous l'horizon<br>pour que Sirius devienne visible
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-4">✨</div>
+                    <h4 class="font-bold text-yellow-400 mb-3">Magnitude</h4>
+                    <p class="text-sm opacity-90">
+                        Plus une étoile est brillante, plus elle est facile à voir dans la lueur de l'aube. 
+                        Sirius (-1.46) est l'étoile la plus brillante du ciel nocturne.
+                    </p>
+                </div>
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-4">🌍</div>
+                    <h4 class="font-bold text-red-400 mb-3">Latitude</h4>
+                    <p class="text-sm opacity-90">
+                        La position sur Terre change l'angle du lever et la durée du crépuscule. 
+                        En Guadeloupe (16°N), les conditions sont idéales.
+                    </p>
+                </div>
+                <div class="glass-card rounded-xl p-6 text-center">
+                    <div class="text-3xl mb-4">🌫️</div>
+                    <h4 class="font-bold text-green-400 mb-3">Atmosphère</h4>
+                    <p class="text-sm opacity-90">
+                        L'humidité, la brume de sable ou les nuages peuvent "éteindre" l'étoile 
+                        et retarder sa visibilité. D'où l'importance de la fenêtre d'observation.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-4 text-center">
+        <div class="section-divider"></div>
+        <div class="max-w-4xl mx-auto">
+            <div class="glass-card rounded-xl p-8">
+                <h3 class="text-2xl font-bold gradient-text mb-6">Levez les yeux vers le ciel</h3>
+                <p class="opacity-90 mb-6">
+                    Une application créée pour célébrer notre héritage astronomique et culturel panafricain.
+                    De l'Égypte antique aux Antilles françaises, Sirius continue de nous guider.
+                </p>
+                <div class="text-sm opacity-70">
+                    © 2025 - Basé sur le rapport "Sirius en Guadeloupe : Guide Astronomique et Culturel"
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Données de prédictions
+        const predictionsData = {
+            "Pointe des Châteaux": {"2025": "22 juillet, 05:12", "2026": "22 juillet, 05:12", "2027": "22 juillet, 05:13", "2028": "21 juillet, 05:13", "2029": "22 juillet, 05:14"},
+            "Pointe de la Grande Vigie": {"2025": "22 juillet, 05:11", "2026": "22 juillet, 05:12", "2027": "22 juillet, 05:12", "2028": "21 juillet, 05:12", "2029": "22 juillet, 05:13"},
+            "Duzer (Sainte-Rose)": {"2025": "22 juillet, 05:13", "2026": "22 juillet, 05:14", "2027": "22 juillet, 05:14", "2028": "21 juillet, 05:14", "2029": "22 juillet, 05:15"},
+            "Pointe du Vieux-Fort": {"2025": "22 juillet, 05:14", "2026": "22 juillet, 05:14", "2027": "22 juillet, 05:15", "2028": "21 juillet, 05:15", "2029": "22 juillet, 05:16"}
+        };
+
+        // Fonction de mise à jour des prédictions
+        function updatePrediction() {
+            const location = document.getElementById('location-select').value;
+            const year = document.getElementById('year-select').value;
+            const prediction = predictionsData[location][year];
+            
+            const [datePart, timePart] = prediction.split(', ');
+            const day = parseInt(datePart.split(' ')[0]);
+            const month = datePart.split(' ')[1];
+            
+            document.getElementById('result-location').textContent = location;
+            document.getElementById('result-date').textContent = datePart;
+            document.getElementById('result-time').textContent = `vers ${timePart}`;
+            document.getElementById('result-window').textContent = `${day - 2} au ${day + 2} ${month}`;
+        }
+
+        // Initialisation du globe 3D
+        function initGlobe() {
+            const container = document.getElementById('globe-container');
+            if (!container) return;
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Lumières
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 3, 5);
+            scene.add(directionalLight);
+            
+            // Sphere pour la Terre
+            const geometry = new THREE.SphereGeometry(1, 32, 32);
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0x4A90E2,
+                shininess: 30
+            });
+            const globe = new THREE.Mesh(geometry, material);
+            scene.add(globe);
+            
+            // Vague animée
+            const waveGeometry = new THREE.TorusGeometry(1.1, 0.03, 8, 32);
+            const waveMaterial = new THREE.MeshBasicMaterial({
+                color: 0xFFD700,
+                transparent: true,
+                opacity: 0.7
+            });
+            const wave = new THREE.Mesh(waveGeometry, waveMaterial);
+            scene.add(wave);
+            
+            camera.position.z = 3;
+            
+            // Animation
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                globe.rotation.y += 0.005;
+                
+                // Animation de la vague
+                const time = Date.now() * 0.001;
+                wave.position.y = Math.sin(time) * 0.5;
+                wave.rotation.x = Math.PI / 2;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Gestion du redimensionnement
+            window.addEventListener('resize', () => {
+                if (container.clientWidth > 0) {
+                    camera.aspect = container.clientWidth / container.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                }
+            });
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            updatePrediction();
+            initGlobe();
+            
+            // Event listeners
+            document.getElementById('location-select').addEventListener('change', updatePrediction);
+            document.getElementById('year-select').addEventListener('change', updatePrediction);
+        });
+    </script>
+</body>
+</html>
