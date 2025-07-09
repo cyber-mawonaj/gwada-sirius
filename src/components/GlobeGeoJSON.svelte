@@ -264,7 +264,7 @@
       
       // Rotation automatique
       if (!isDragging) {
-        rotation += 0.002;
+        rotation -= 0.002;
       }
       
       requestAnimationFrame(draw);

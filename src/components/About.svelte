@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { t } from '../lib/i18n.js';
   
   let visible = false;
   
@@ -71,8 +72,8 @@
         {#each features as feature, i}
           <div class="feature-card card" style="animation-delay: {i * 0.2}s">
             <div class="feature-icon">{feature.icon}</div>
-            <h3>{feature.title}</h3>
-            <p>{feature.description}</p>
+            <h3>{$t(feature.title)}</h3>
+            <p>{$t(feature.description)}</p>
           </div>
         {/each}
       </div>
@@ -163,6 +164,17 @@
   .feature-card h3 {
     color: var(--color-primary);
     margin-bottom: 0.5rem;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   @media (max-width: 768px) {

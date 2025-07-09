@@ -224,6 +224,17 @@
     color: rgba(255, 255, 255, 0.7);
   }
   
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
   @media (max-width: 768px) {
     .timeline-items {
       padding-left: 20px;

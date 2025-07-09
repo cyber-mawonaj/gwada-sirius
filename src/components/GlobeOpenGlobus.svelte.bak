@@ -29,7 +29,7 @@
   async function initGlobe() {
     // Charger OpenGlobus depuis CDN
     const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/@openglobus/og@0.10.0/dist/og.umd.js';
+    script.src = 'https://unpkg.com/@openglobus/og@0.10.0/dist/og.umd.js';
     script.onload = () => {
       const { Globe, XYZ, Vector, Entity, Label } = window.og;
       

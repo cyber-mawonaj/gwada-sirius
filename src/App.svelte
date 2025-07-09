@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import { initLanguage } from './lib/i18n.js';
   import Hero from './components/Hero.svelte';
   import Navigation from './components/Navigation.svelte';
   import About from './components/About.svelte';
@@ -7,15 +8,19 @@
   import Science from './components/Science.svelte';
   import Culture from './components/Culture.svelte';
   import Observatory from './components/Observatory.svelte';
-  import Globe from './components/Globe.svelte';
-  import GlobeOpenGlobus from './components/GlobeOpenGlobus.svelte';
   import GlobeGeoJSON from './components/GlobeGeoJSON.svelte';
   import Footer from './components/Footer.svelte';
+  import Dogon from './components/Dogon.svelte';
+  import Calculations from './components/Calculations.svelte';
+  import ObservationMap from './components/ObservationMap.svelte';
   
   let scrollY = 0;
   let activeSection = 'home';
   
   onMount(() => {
+    // Initialiser la langue
+    initLanguage();
+    
     const handleScroll = () => {
       scrollY = window.scrollY;
       
@@ -45,10 +50,11 @@
   <About />
   <Predictions />
   <Science />
+  <Calculations />
+  <Dogon />
   <Culture />
   <Observatory />
-  <Globe />
-  <GlobeOpenGlobus />
+  <ObservationMap />
   <GlobeGeoJSON />
 </main>
 

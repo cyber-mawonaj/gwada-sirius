@@ -1,4 +1,7 @@
 <script>
+  import { t } from '../lib/i18n.js';
+  import LanguageSelector from './LanguageSelector.svelte';
+  
   export let activeSection = 'home';
   
   let isMenuOpen = false;
@@ -8,12 +11,12 @@
   };
   
   const menuItems = [
-    { id: 'home', label: 'Accueil', icon: '🌟' },
-    { id: 'about', label: 'Découvrir', icon: '✨' },
-    { id: 'predictions', label: 'Prédictions', icon: '📅' },
-    { id: 'science', label: 'Science', icon: '🔭' },
-    { id: 'culture', label: 'Culture', icon: '🌍' },
-    { id: 'observatory', label: 'Observer', icon: '👁️' }
+    { id: 'home', label: 'nav_home', icon: '🌟' },
+    { id: 'about', label: 'nav_about', icon: '✨' },
+    { id: 'predictions', label: 'nav_predictions', icon: '📅' },
+    { id: 'science', label: 'nav_science', icon: '🔭' },
+    { id: 'culture', label: 'nav_culture', icon: '🌍' },
+    { id: 'observatory', label: 'nav_observatory', icon: '👁️' }
   ];
   
   const scrollToSection = (id) => {
@@ -43,11 +46,13 @@
               on:click|preventDefault={() => scrollToSection(item.id)}
             >
               <span class="nav-icon">{item.icon}</span>
-              <span class="nav-label">{item.label}</span>
+              <span class="nav-label">{$t(item.label)}</span>
             </a>
           </li>
         {/each}
       </ul>
+      
+      <LanguageSelector />
     </div>
   </div>
 </nav>

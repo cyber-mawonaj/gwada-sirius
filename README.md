@@ -1,31 +1,29 @@
-# Sirius en Guadeloupe 🌟
+# Sirius en Guadeloupe - Gwada-Sirius
 
-Un site web interactif pour découvrir et observer le lever héliaque de Sirius depuis la Guadeloupe.
+Un projet web célébrant le lever héliaque de Sirius en Guadeloupe, fusionnant astronomie, culture africaine et héritage caribéen.
 
-## 🌍 À propos
+## 🌟 À propos
 
-Ce projet célèbre le patrimoine astronomique africain et caribéen à travers l'observation du lever héliaque de Sirius. Il combine science moderne et savoirs ancestraux pour offrir un guide complet d'observation.
+Cette application web interactive permet de :
+- Calculer les dates précises du lever héliaque de Sirius pour différents lieux en Guadeloupe
+- Explorer l'héritage culturel de Sirius à travers les civilisations (Égypte ancienne, Dogons, Caraïbes)
+- Comprendre la science astronomique derrière ce phénomène
+- Découvrir les meilleurs sites d'observation en Guadeloupe
 
-## ✨ Fonctionnalités
+## 🚀 Technologies utilisées
 
-- **Calculateur de prédictions** : Trouvez la date et l'heure exactes du lever héliaque pour 7 sites en Guadeloupe
-- **Guide scientifique** : Comprenez la mécanique céleste du phénomène
-- **Patrimoine culturel** : Découvrez l'importance de Sirius dans les cultures africaines
-- **Guide pratique** : Instructions détaillées pour réussir votre observation
-- **Visualisation interactive** : Globe animé montrant la progression mondiale du phénomène
+- **Svelte** - Framework JavaScript réactif
+- **Canvas 2D** - Pour les animations et visualisations
+- **GeoJSON** - Pour les cartes interactives
+- **i18n** - Support multilingue (Français, English, Kreyòl Ayisyen)
 
-## 🛠️ Technologies
-
-- **Svelte** : Framework JS réactif et performant
-- **Vite** : Build tool moderne et rapide
-- **Canvas 2D** : Pour les animations et visualisations
-- **CSS moderne** : Animations, gradients, et design responsive
-
-## 🚀 Installation
+## 📦 Installation
 
 ```bash
 # Cloner le repository
-git clone https://github.com/yourusername/gwada-sirius.git
+git clone https://github.com/[votre-username]/gwada-sirius.git
+
+# Entrer dans le dossier
 cd gwada-sirius
 
 # Installer les dépendances
@@ -35,41 +33,39 @@ npm install
 npm run dev
 ```
 
-## 📦 Build
+## 🌍 Fonctionnalités
 
-```bash
-# Créer une version de production
-npm run build
-
-# Prévisualiser la version de production
-npm run preview
-```
+- **Calculateur de prédictions** : Dates précises pour 7 sites d'observation
+- **Globe interactif** : Visualisation de la trajectoire de Sirius
+- **Carte des sites** : Localisation des meilleurs points d'observation
+- **Multilingue** : Interface en français, anglais et créole haïtien
+- **Responsive** : Optimisé pour mobile et desktop
+- **Animations** : Ciel étoilé animé et patterns africains
 
 ## 🎨 Design
 
-Le design s'inspire des motifs géométriques africains (Kente, Bogolan, Adinkra) avec une palette de couleurs panafricaine et caribéenne :
-- Or (Sirius, soleil)
-- Rouge profond
-- Vert forêt
-- Bleu nuit profond
+Le design s'inspire des motifs africains (Kente, Adinkra, Bogolan) avec une palette de couleurs symbolique :
+- Or (#FFD700) - Sirius et la lumière divine
+- Rouge (#FF6B35) - Force et énergie vitale
+- Vert (#4CAF50) - Nature et renouveau
+- Bleu nuit (#0A1628) - Ciel nocturne
 
-## 📱 Mobile First
+## 👥 Crédits
 
-L'application est conçue en priorité pour les appareils mobiles avec :
-- Navigation responsive
-- Touch-friendly
-- Performance optimisée
+Projet réalisé avec ❤️ par :
+- [cyber-mawonaj](https://github.com/cyber-mawonaj)
+- [OKI](https://o-k-i.net)
+
+## 📜 Licence
+
+Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
 ## 🙏 Remerciements
 
-- Données astronomiques calculées avec Stellarium
-- Inspiré du rapport "Sirius en Guadeloupe : Guide Astronomique et Culturel"
-- Patrimoine culturel africain et caribéen
-
-## 📄 Licence
-
-Ce projet est sous licence MIT.
+- Les anciens Égyptiens pour leur sagesse astronomique
+- Les Dogons du Mali pour avoir préservé ces connaissances
+- La communauté guadeloupéenne pour perpétuer ces traditions
 
 ---
 
-*"Les étoiles sont les ancêtres qui veillent sur nous"* - Proverbe africain
+*"Les étoiles sont les ancêtres qui veillent sur nous" - Proverbe africain*

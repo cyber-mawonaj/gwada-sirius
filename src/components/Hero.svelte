@@ -1,116 +1,124 @@
 <script>
   import { onMount } from 'svelte';
+  import { t } from '../lib/i18n.js';
   
   let starsCanvas;
-  let mouseX = 0;
-  let mouseY = 0;
+  let mouseX = 0.5;
+  let mouseY = 0.5;
   
   onMount(() => {
     const ctx = starsCanvas.getContext('2d');
     const stars = [];
+    const starCount = 150;
     
-    // Créer les étoiles
-    for (let i = 0; i < 200; i++) {
-      stars.push({
-        x: Math.random() * starsCanvas.width,
-        y: Math.random() * starsCanvas.height,
-        size: Math.random() * 2,
-        speed: Math.random() * 0.5 + 0.1,
-        brightness: Math.random()
-      });
-    }
-    
-    // Animation des étoiles
-    const animate = () => {
-      ctx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
-      
-      stars.forEach(star => {
-        // Effet parallaxe avec la souris
-        const offsetX = (mouseX - 0.5) * star.speed * 20;
-        const offsetY = (mouseY - 0.5) * star.speed * 20;
+    // Attendre que le DOM soit prêt
+    setTimeout(() => {
+      // Redimensionner le canvas
+      const resize = () => {
+        const hero = starsCanvas.parentElement;
+        starsCanvas.width = hero.offsetWidth;
+        starsCanvas.height = hero.offsetHeight;
         
-        ctx.beginPath();
-        ctx.arc(
-          star.x + offsetX, 
-          star.y + offsetY, 
-          star.size, 
-          0, 
-          Math.PI * 2
-        );
-        ctx.fillStyle = `rgba(255, 215, 0, ${star.brightness})`;
-        ctx.fill();
-        
-        // Animer la brillance
-        star.brightness += (Math.random() - 0.5) * 0.05;
-        star.brightness = Math.max(0.1, Math.min(1, star.brightness));
-      });
+        // Réinitialiser les étoiles après redimensionnement
+        if (stars.length === 0) {
+          for (let i = 0; i < starCount; i++) {
+            stars.push({
+              x: Math.random() * starsCanvas.width,
+              y: Math.random() * starsCanvas.height,
+              size: Math.random() * 2,
+              brightness: Math.random(),
+              speed: 0.1 + Math.random() * 0.5
+            });
+          }
+        }
+      };
       
-      requestAnimationFrame(animate);
-    };
-    
-    // Redimensionner le canvas
-    const resize = () => {
-      starsCanvas.width = window.innerWidth;
-      starsCanvas.height = window.innerHeight;
-    };
-    
-    resize();
-    animate();
-    
-    window.addEventListener('resize', resize);
-    
-    return () => {
-      window.removeEventListener('resize', resize);
-    };
+      resize();
+      window.addEventListener('resize', resize);
+      
+      // Animation des étoiles
+      const animate = () => {
+        ctx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
+        
+        // Effet de parallaxe avec la souris
+        const offsetX = (mouseX - 0.5) * 20;
+        const offsetY = (mouseY - 0.5) * 20;
+        
+        stars.forEach(star => {
+          // Mouvement subtil
+          star.x += Math.sin(Date.now() * 0.0001 * star.speed) * 0.5;
+          star.y += Math.cos(Date.now() * 0.0001 * star.speed) * 0.3;
+          
+          ctx.beginPath();
+          ctx.arc(
+            star.x + offsetX, 
+            star.y + offsetY, 
+            star.size, 
+            0, 
+            Math.PI * 2
+          );
+          ctx.fillStyle = `rgba(255, 215, 0, ${star.brightness})`;
+          ctx.fill();
+          
+          // Animer la brillance
+          star.brightness += (Math.random() - 0.5) * 0.05;
+          star.brightness = Math.max(0.1, Math.min(1, star.brightness));
+        });
+        
+        requestAnimationFrame(animate);
+      };
+      
+      animate();
+      
+      return () => {
+        window.removeEventListener('resize', resize);
+      };
+    }, 100);
   });
   
   const handleMouseMove = (e) => {
-    mouseX = e.clientX / window.innerWidth;
-    mouseY = e.clientY / window.innerHeight;
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX = (e.clientX - rect.left) / rect.width;
+    mouseY = (e.clientY - rect.top) / rect.height;
   };
 </script>
 
 <section id="home" class="hero" on:mousemove={handleMouseMove}>
   <canvas bind:this={starsCanvas} class="stars-canvas"></canvas>
   
-  <div class="hero-pattern pattern-adinkra"></div>
+  <div class="hero-pattern">
+    <!-- Patterns africains visibles -->
+    <div class="pattern-overlay pattern-kente"></div>
+    <div class="pattern-overlay pattern-adinkra"></div>
+    <div class="pattern-overlay pattern-bogolan"></div>
+  </div>
   
   <div class="hero-content">
     <div class="container">
       <div class="hero-text">
         <h1 class="hero-title">
-          <span class="title-line">Sirius</span>
-          <span class="title-line">en Guadeloupe</span>
+          <span class="title-line">{$t('hero_title1')}</span>
+          <span class="title-line">{$t('hero_title2')}</span>
         </h1>
         <p class="hero-subtitle">
-          Wep Ronpet - L'Ouverture de l'Année Cosmique
+          {$t('hero_subtitle')}
         </p>
         <p class="hero-description">
-          Le rendez-vous millénaire entre Ciel, Science et Culture
+          {$t('hero_description')}
         </p>
         <p class="hero-date">
-          Lever héliaque : <strong>22 Juillet 2025</strong>
+          {$t('hero_date')}<strong>{$t('hero_date_value')}</strong>
         </p>
         <div class="hero-cta">
           <a href="#predictions" class="btn btn-primary">
-            Découvrir les Prédictions
+            {$t('hero_cta_predictions')}
           </a>
           <a href="#about" class="btn btn-outline">
-            En Savoir Plus
+            {$t('hero_cta_learn')}
           </a>
         </div>
       </div>
-      
-      <div class="hero-visual">
-        <div class="sirius-glow"></div>
-        <div class="ankh-symbol">☥</div>
-      </div>
     </div>
-  </div>
-  
-  <div class="scroll-indicator">
-    <span>Défiler pour explorer</span>
-    <div class="scroll-arrow">↓</div>
   </div>
 </section>
 
@@ -118,6 +126,7 @@
   .hero {
     position: relative;
     min-height: 100vh;
+    background: var(--gradient-dawn);
     display: flex;
     align-items: center;
     overflow: hidden;
@@ -130,6 +139,7 @@
     width: 100%;
     height: 100%;
     z-index: 1;
+    pointer-events: none;
   }
   
   .hero-pattern {
@@ -138,36 +148,107 @@
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0.1;
     z-index: 2;
+    pointer-events: none;
+  }
+  
+  .pattern-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background-size: 200px 200px;
+    mix-blend-mode: overlay;
+  }
+  
+  .pattern-kente {
+    background-image: 
+      repeating-linear-gradient(
+        45deg,
+        var(--color-primary) 0px,
+        var(--color-primary) 10px,
+        transparent 10px,
+        transparent 20px,
+        var(--color-secondary) 20px,
+        var(--color-secondary) 30px,
+        transparent 30px,
+        transparent 40px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        var(--color-accent) 0px,
+        var(--color-accent) 10px,
+        transparent 10px,
+        transparent 20px
+      );
+    animation: slidePattern 30s linear infinite;
+  }
+  
+  .pattern-adinkra {
+    background-image: 
+      radial-gradient(circle at 20% 20%, var(--color-primary) 2px, transparent 2px),
+      radial-gradient(circle at 80% 80%, var(--color-secondary) 2px, transparent 2px),
+      radial-gradient(circle at 50% 50%, var(--color-accent) 3px, transparent 3px);
+    background-size: 50px 50px;
+    animation: rotatePattern 40s linear infinite;
+  }
+  
+  .pattern-bogolan {
+    background-image: 
+      repeating-conic-gradient(
+        from 0deg at 50% 50%,
+        var(--color-primary) 0deg 10deg,
+        transparent 10deg 20deg
+      );
+    background-size: 100px 100px;
+    opacity: 0.05;
+    animation: pulsePattern 20s ease-in-out infinite;
+  }
+  
+  @keyframes slidePattern {
+    from { transform: translateX(0); }
+    to { transform: translateX(200px); }
+  }
+  
+  @keyframes rotatePattern {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  @keyframes pulsePattern {
+    0%, 100% { opacity: 0.05; }
+    50% { opacity: 0.15; }
   }
   
   .hero-content {
     position: relative;
-    z-index: 3;
+    z-index: 10;
     width: 100%;
+    padding: var(--spacing-xl) 0;
   }
   
-  .hero-content .container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
+  .hero-text {
+    max-width: 600px;
+    text-align: center;
+    margin: 0 auto;
   }
   
   .hero-title {
-    font-size: clamp(3rem, 10vw, 6rem);
-    line-height: 1;
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 700;
+    line-height: 1.1;
     margin-bottom: 1rem;
+    color: var(--color-light);
   }
   
   .title-line {
     display: block;
-    animation: fadeInUp 1s ease-out;
-    animation-fill-mode: both;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out forwards;
   }
   
   .title-line:nth-child(2) {
+    color: var(--color-primary);
     animation-delay: 0.2s;
   }
   
@@ -195,10 +276,16 @@
     animation-fill-mode: both;
   }
   
+  .hero-date strong {
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+  
   .hero-cta {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    justify-content: center;
     animation: fadeInUp 1s ease-out 0.8s;
     animation-fill-mode: both;
   }
@@ -214,44 +301,6 @@
     color: var(--color-dark);
   }
   
-  .hero-visual {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .sirius-glow {
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, var(--color-primary) 0%, transparent 70%);
-    opacity: 0.5;
-    animation: glow 3s ease-in-out infinite;
-  }
-  
-  .ankh-symbol {
-    font-size: 15rem;
-    color: var(--color-primary);
-    animation: float 6s ease-in-out infinite;
-    filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.5));
-  }
-  
-  .scroll-indicator {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    animation: fadeInUp 1s ease-out 1s;
-    animation-fill-mode: both;
-  }
-  
-  .scroll-arrow {
-    font-size: 2rem;
-    animation: bounce 2s ease-in-out infinite;
-  }
-  
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -263,28 +312,19 @@
     }
   }
   
-  @keyframes bounce {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(10px);
-    }
-  }
-  
-  /* Mobile */
   @media (max-width: 768px) {
-    .hero-content .container {
-      grid-template-columns: 1fr;
-      text-align: center;
-    }
-    
-    .hero-visual {
-      display: none;
+    .hero-title {
+      font-size: clamp(2.5rem, 10vw, 4rem);
     }
     
     .hero-cta {
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .btn {
+      width: 100%;
+      max-width: 300px;
     }
   }
 </style>

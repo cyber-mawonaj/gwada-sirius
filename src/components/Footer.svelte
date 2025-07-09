@@ -1,4 +1,5 @@
 <script>
+  import { t } from '../lib/i18n.js';
   const currentYear = new Date().getFullYear();
 </script>
 
@@ -57,6 +58,14 @@
     
     <div class="footer-bottom">
       <p>&copy; {currentYear} Sirius Gwada. Levez les yeux vers le ciel.</p>
+      <p class="footer-credits">
+        {$t('footer_copyright')} 
+        <a href="https://github.com/cyber-mawonaj" target="_blank" rel="noopener">cyber-mawonaj</a> 
+        {$t('footer_and')} 
+        <a href="https://o-k-i.net" target="_blank" rel="noopener">
+          OKI <img src="https://o-k-i.net/assets/img/logo-oki.png" alt="OKI Logo" class="oki-logo">
+        </a>
+      </p>
       <p class="footer-quote">
         "Les étoiles sont les ancêtres qui veillent sur nous" - Proverbe africain
       </p>
@@ -119,6 +128,27 @@
     text-align: center;
     padding-top: var(--spacing-md);
     border-top: 1px solid rgba(255, 215, 0, 0.2);
+  }
+  
+  .footer-credits {
+    margin: 0.5rem 0;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .footer-credits a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
+  
+  .footer-credits a:hover {
+    opacity: 0.8;
+  }
+  
+  .oki-logo {
+    height: 20px;
+    vertical-align: middle;
+    margin-left: 5px;
   }
   
   .footer-quote {
