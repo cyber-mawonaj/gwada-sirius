@@ -1,6 +1,6 @@
 <script>
   import { onMount } from 'svelte';
-  import anime from 'animejs/lib/anime.es.js';
+  import anime from '../lib/anime.js';
   
   let loading = true;
   let progress = 0;

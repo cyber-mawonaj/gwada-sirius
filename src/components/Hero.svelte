@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { t } from '../lib/i18n.js';
-  import anime from 'animejs/lib/anime.es.js';
+  import anime from '../lib/anime.js';
   
   let starsCanvas;
   let mouseX = 0.5;

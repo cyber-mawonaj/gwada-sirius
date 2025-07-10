@@ -1,7 +1,7 @@
 <script>
   import { t } from '../lib/i18n.js';
   import LanguageSelector from './LanguageSelector.svelte';
-  import anime from 'animejs/lib/anime.es.js';
+  import anime from '../lib/anime.js';
   import { onMount } from 'svelte';
   
   export let activeSection = 'home';
