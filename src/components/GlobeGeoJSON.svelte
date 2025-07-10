@@ -406,7 +406,6 @@
   .timeline-entry .location {
     color: var(--color-light);
   }
-  }
   
   @media (max-width: 768px) {
     .globe-container {
