@@ -277,9 +277,9 @@
 <section id="geojson-section" class="globe-section">
   <div class="container">
     <div class="section-header" class:visible>
-      <h2>Globe avec GeoJSON</h2>
+      <h2>La Vague Planétaire de Sirius</h2>
       <p class="section-subtitle">
-        Canvas 2D avec données géographiques précises
+        Visualisation de la progression du lever héliaque à travers le monde
       </p>
     </div>
     
@@ -292,20 +292,36 @@
       
       <div class="globe-info">
         <div class="info-card card">
-          <h3>GeoJSON + Canvas 2D</h3>
-          <p><strong>Avantages :</strong></p>
-          <ul>
-            <li>✅ Léger et rapide</li>
-            <li>✅ Contrôle total du rendu</li>
-            <li>✅ Animation personnalisée de la vague</li>
-            <li>✅ Pas de dépendances externes</li>
-          </ul>
-          <p><strong>Inconvénients :</strong></p>
-          <ul>
-            <li>❌ Calculs de projection manuels</li>
-            <li>❌ Pas de textures satellite</li>
-            <li>❌ Performance limitée avec beaucoup de détails</li>
-          </ul>
+          <h3>Le Phénomène de la Vague</h3>
+          <p>
+            Le lever héliaque de Sirius ne se produit pas simultanément sur toute la Terre. 
+            Tel une vague cosmique, il progresse d'Est en Ouest, touchant d'abord La Réunion 
+            fin juin, puis traversant l'Afrique, pour finalement atteindre les Caraïbes en juillet.
+          </p>
+          <p>
+            Cette animation montre la progression de cette "vague planétaire" qui suit 
+            la rotation terrestre et la position de Sirius dans le ciel. Chaque lieu 
+            expérimente ce moment sacré à une date précise, créant un calendrier 
+            cosmique naturel qui a guidé les civilisations pendant des millénaires.
+          </p>
+          <div class="wave-timeline">
+            <div class="timeline-entry">
+              <span class="date">27 Juin</span>
+              <span class="location">La Réunion</span>
+            </div>
+            <div class="timeline-entry">
+              <span class="date">16 Juillet</span>
+              <span class="location">Kinshasa</span>
+            </div>
+            <div class="timeline-entry">
+              <span class="date">22-23 Juillet</span>
+              <span class="location">Guadeloupe & Martinique</span>
+            </div>
+            <div class="timeline-entry">
+              <span class="date">3 Août</span>
+              <span class="location">Le Caire</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -360,14 +376,36 @@
     margin-bottom: 1rem;
   }
   
-  .info-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0.5rem 0;
+  .info-card p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
   }
   
-  .info-card li {
-    padding: 0.25rem 0;
+  .wave-timeline {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .timeline-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid var(--color-primary);
+  }
+  
+  .timeline-entry .date {
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+  
+  .timeline-entry .location {
+    color: var(--color-light);
+  }
   }
   
   @media (max-width: 768px) {
