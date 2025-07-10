@@ -1,18 +1,18 @@
 <script>
   import { onMount } from 'svelte';
+  import anime from 'animejs/lib/anime.es.js';
   
   let canvas;
   let visible = false;
+  let ctx;
+  let animationId;
   
   onMount(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !ctx) {
           visible = true;
-          if (!canvas.hasAttribute('data-initialized')) {
-            initGlobe();
-            canvas.setAttribute('data-initialized', 'true');
-          }
+          initGlobe();
         }
       });
     });
@@ -20,14 +20,17 @@
     const section = document.getElementById('geojson-section');
     if (section) observer.observe(section);
     
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (animationId) cancelAnimationFrame(animationId);
+    };
   });
   
   async function initGlobe() {
-    const ctx = canvas.getContext('2d');
+    ctx = canvas.getContext('2d');
+    
     const width = canvas.width = canvas.offsetWidth;
     const height = canvas.height = canvas.offsetHeight;
-    
     const centerX = width / 2;
     const centerY = height / 2;
     const radius = Math.min(width, height) * 0.35;
@@ -37,6 +40,23 @@
     let isDragging = false;
     let lastMouseX = 0;
     let waveAnimation = 0;
+    let waveProgress = 0;    
+    // Animation d'entrée
+    anime.timeline({
+      easing: 'easeOutQuad'
+    })
+    .add({
+      targets: canvas,
+      scale: [0.8, 1],
+      opacity: [0, 1],
+      duration: 1200
+    })
+    .add({
+      targets: '.globe-info',
+      translateX: [50, 0],
+      opacity: [0, 1],
+      duration: 1000
+    }, '-=600');
     
     // Charger les données GeoJSON des continents
     let worldData = null;
@@ -47,31 +67,61 @@
       console.error('Erreur chargement GeoJSON:', error);
     }
     
-    // Données des lieux
+    // Données des lieux avec animation de vague
     const locations = [
-      { name: 'La Réunion', lat: -21.1151, lon: 55.5364, date: '27 Juin', day: 178 },
-      { name: 'Kinshasa', lat: -4.4419, lon: 15.2663, date: '16 Juillet', day: 197 },
-      { name: 'Guadeloupe', lat: 16.2650, lon: -61.5510, date: '22 Juillet', day: 203 },
-      { name: 'Martinique', lat: 14.6415, lon: -61.0242, date: '23 Juillet', day: 204 },
-      { name: 'Dakar', lat: 14.7167, lon: -17.4677, date: '23 Juillet', day: 204 },
-      { name: 'Abidjan', lat: 5.3600, lon: -4.0083, date: '28 Juillet', day: 209 },
-      { name: 'Le Caire', lat: 30.0444, lon: 31.2357, date: '3 Août', day: 215 },
-      { name: 'Paris', lat: 48.8566, lon: 2.3522, date: '12 Août', day: 224 }
+      { name: 'La Réunion', lat: -21.1151, lon: 55.5364, date: '27 Juin', color: '#FF6B35', day: 178 },
+      { name: 'Kinshasa', lat: -4.4419, lon: 15.2663, date: '16 Juillet', color: '#FFA500', day: 197 },
+      { name: 'Guadeloupe', lat: 16.2650, lon: -61.5510, date: '22 Juillet', color: '#FFD700', day: 203 },
+      { name: 'Martinique', lat: 14.6415, lon: -61.0242, date: '23 Juillet', color: '#FFD700', day: 204 },
+      { name: 'Dakar', lat: 14.7167, lon: -17.4677, date: '23 Juillet', color: '#FFE44D', day: 204 },
+      { name: 'Le Caire', lat: 30.0444, lon: 31.2357, date: '3 Août', color: '#FFFACD', day: 215 }
     ];
     
-    // Gérer les interactions
-    canvas.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      zoom += e.deltaY * -0.001;
-      zoom = Math.min(Math.max(0.5, zoom), 2);
+    // Animation de la progression de la vague
+    anime({
+      targets: { progress: 0 },
+      progress: 365,
+      duration: 30000,
+      easing: 'linear',
+      loop: true,
+      update: function(anim) {
+        waveProgress = anim.animations[0].currentValue;
+      }
     });
     
+    // Particules pour l'effet de vague
+    const particles = [];
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        angle: Math.random() * Math.PI * 2,
+        radius: radius + Math.random() * 50,
+        size: Math.random() * 3 + 1,
+        speed: Math.random() * 0.02 + 0.01,
+        opacity: 0
+      });
+    }
+    
+    // Animation des particules
+    particles.forEach((particle, i) => {
+      anime({
+        targets: particle,
+        opacity: [0, 0.8, 0],
+        radius: [radius, radius + 100],
+        duration: 3000,
+        delay: i * 60,
+        easing: 'easeOutQuad',
+        loop: true
+      });
+    });
+    
+    // Gestion de la souris
     canvas.addEventListener('mousedown', (e) => {
       isDragging = true;
       lastMouseX = e.clientX;
+      canvas.style.cursor = 'grabbing';
     });
     
-    window.addEventListener('mousemove', (e) => {
+    canvas.addEventListener('mousemove', (e) => {
       if (isDragging) {
         const deltaX = e.clientX - lastMouseX;
         rotation -= deltaX * 0.01;
@@ -81,199 +131,232 @@
     
     window.addEventListener('mouseup', () => {
       isDragging = false;
+      canvas.style.cursor = 'grab';
     });
     
-    // Fonction pour projeter les coordonnées
+    // Zoom avec la molette
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const zoomDelta = e.deltaY > 0 ? 0.9 : 1.1;
+      const newZoom = zoom * zoomDelta;
+      
+      anime({
+        targets: { zoom },
+        zoom: Math.max(0.5, Math.min(3, newZoom)),
+        duration: 300,
+        easing: 'easeOutQuad',
+        update: function(anim) {
+          zoom = anim.animations[0].currentValue;
+        }
+      });
+    });
+    
+    // Projection 3D
     function project(lon, lat, r) {
       const phi = (90 - lat) * Math.PI / 180;
-      const theta = (-lon - rotation * 57.3) * Math.PI / 180;
+      const theta = (lon + rotation) * Math.PI / 180;
       
       const x = r * Math.sin(phi) * Math.cos(theta);
       const y = r * Math.cos(phi);
       const z = r * Math.sin(phi) * Math.sin(theta);
       
-      return { x: centerX + x, y: centerY - y, z: z };
+      return {
+        x: centerX + x * zoom,
+        y: centerY - y * zoom,
+        z: z,
+        visible: z > 0
+      };
     }
     
-    // Dessiner un chemin GeoJSON
-    function drawPath(coordinates, ctx, radius) {
-      ctx.beginPath();
-      let started = false;
-      
-      coordinates.forEach(([lon, lat], i) => {
-        const p = project(lon, lat, radius);
-        if (p.z > -radius * 0.3) {
-          if (!started) {
-            ctx.moveTo(p.x, p.y);
-            started = true;
-          } else {
-            ctx.lineTo(p.x, p.y);
-          }
-        }
-      });
-      
-      return started;
-    }
-    
+    // Dessiner le globe
     function draw() {
       ctx.clearRect(0, 0, width, height);
       
-      const currentRadius = radius * zoom;
+      // Fond avec dégradé
+      const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius * zoom);
+      gradient.addColorStop(0, 'rgba(10, 22, 40, 0.2)');
+      gradient.addColorStop(1, 'rgba(10, 22, 40, 0.8)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
       
       // Ombre du globe
-      ctx.save();
       ctx.beginPath();
-      ctx.arc(centerX + 5, centerY + 5, currentRadius, 0, Math.PI * 2);
+      ctx.arc(centerX + 10, centerY + 10, radius * zoom, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      ctx.filter = 'blur(10px)';
       ctx.fill();
-      ctx.restore();
       
-      // Océan
+      // Globe principal
       ctx.beginPath();
-      ctx.arc(centerX, centerY, currentRadius, 0, Math.PI * 2);
-      ctx.fillStyle = '#4A90E2';
-      ctx.fill();
-      
-      // Gradient pour l'effet 3D
-      const gradient = ctx.createRadialGradient(
-        centerX - currentRadius * 0.3,
-        centerY - currentRadius * 0.3,
+      ctx.arc(centerX, centerY, radius * zoom, 0, Math.PI * 2);
+      const globeGradient = ctx.createRadialGradient(
+        centerX - radius * 0.3 * zoom, 
+        centerY - radius * 0.3 * zoom, 
         0,
-        centerX,
-        centerY,
-        currentRadius
+        centerX, centerY, radius * zoom
       );
-      gradient.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0.2)');
-      
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, currentRadius, 0, Math.PI * 2);
-      ctx.fillStyle = gradient;
+      globeGradient.addColorStop(0, '#1a3a5a');
+      globeGradient.addColorStop(0.5, '#0f2847');
+      globeGradient.addColorStop(1, '#0a1628');
+      ctx.fillStyle = globeGradient;
       ctx.fill();
       
-      // Dessiner les continents depuis GeoJSON
-      if (worldData && worldData.features) {
-        ctx.save();
-        ctx.fillStyle = '#228B22';
-        ctx.strokeStyle = '#1F5F1F';
-        ctx.lineWidth = 0.5;
+      // Grille de latitude/longitude avec animation
+      ctx.strokeStyle = 'rgba(255, 215, 0, 0.1)';
+      ctx.lineWidth = 1;
+      
+      // Lignes de latitude
+      for (let lat = -80; lat <= 80; lat += 20) {
+        ctx.beginPath();
+        for (let lon = -180; lon <= 180; lon += 5) {
+          const p = project(lon, lat, radius);
+          if (p.visible) {
+            if (lon === -180) {
+              ctx.moveTo(p.x, p.y);
+            } else {
+              ctx.lineTo(p.x, p.y);
+            }
+          }
+        }
+        ctx.stroke();
+      }
+      
+      // Lignes de longitude
+      for (let lon = -180; lon <= 180; lon += 30) {
+        ctx.beginPath();
+        for (let lat = -90; lat <= 90; lat += 5) {
+          const p = project(lon, lat, radius);
+          if (p.visible) {
+            if (lat === -90) {
+              ctx.moveTo(p.x, p.y);
+            } else {
+              ctx.lineTo(p.x, p.y);
+            }
+          }
+        }
+        ctx.stroke();
+      }
+      
+      // Dessiner les continents
+      if (worldData) {
+        ctx.strokeStyle = '#4CAF50';
+        ctx.fillStyle = 'rgba(76, 175, 80, 0.3)';
+        ctx.lineWidth = 2;
         
         worldData.features.forEach(feature => {
           if (feature.geometry.type === 'Polygon') {
-            feature.geometry.coordinates.forEach(ring => {
-              if (drawPath(ring, ctx, currentRadius)) {
-                ctx.fill();
-                ctx.stroke();
-              }
-            });
+            drawPolygon(feature.geometry.coordinates[0]);
           } else if (feature.geometry.type === 'MultiPolygon') {
             feature.geometry.coordinates.forEach(polygon => {
-              polygon.forEach(ring => {
-                if (drawPath(ring, ctx, currentRadius)) {
-                  ctx.fill();
-                  ctx.stroke();
-                }
-              });
+              drawPolygon(polygon[0]);
             });
           }
         });
+      }
+      
+      // Dessiner les particules de la vague
+      particles.forEach(particle => {
+        const p = project(
+          particle.angle * 180 / Math.PI - 180,
+          Math.sin(Date.now() * 0.001 * particle.speed) * 30,
+          particle.radius
+        );
         
-        ctx.restore();
-      }
-      
-      // Grille
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-      ctx.lineWidth = 0.5;
-      
-      // Méridiens
-      for (let lon = -180; lon <= 180; lon += 30) {
-        const coords = [];
-        for (let lat = -90; lat <= 90; lat += 5) {
-          coords.push([lon, lat]);
-        }
-        drawPath(coords, ctx, currentRadius);
-        ctx.stroke();
-      }
-      
-      // Parallèles
-      for (let lat = -60; lat <= 60; lat += 30) {
-        const coords = [];
-        for (let lon = -180; lon <= 180; lon += 5) {
-          coords.push([lon, lat]);
-        }
-        drawPath(coords, ctx, currentRadius);
-        ctx.stroke();
-      }
-      
-      // Bordure
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, currentRadius, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      
-      // Animation de la vague
-      waveAnimation += 0.02;
-      const waveDay = ((Math.sin(waveAnimation) + 1) / 2) * 46 + 178;
-      
-      // Dessiner les points
-      locations.forEach((loc, i) => {
-        const p = project(loc.lon, loc.lat, currentRadius);
-        
-        if (p.z > -currentRadius * 0.3) {
-          const isActive = waveDay >= loc.day;
-          const isNear = Math.abs(waveDay - loc.day) < 5;
-          
-          // Effet de vague
-          if (isNear && p.z > 0) {
-            const waveSize = 40 * (1 - Math.abs(waveDay - loc.day) / 5);
-            const waveGradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, waveSize);
-            waveGradient.addColorStop(0, 'rgba(255, 215, 0, 0.8)');
-            waveGradient.addColorStop(0.5, 'rgba(255, 215, 0, 0.3)');
-            waveGradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
-            ctx.fillStyle = waveGradient;
-            ctx.fillRect(p.x - waveSize, p.y - waveSize, waveSize * 2, waveSize * 2);
-          }
-          
-          // Point
-          const opacity = p.z > 0 ? 1 : 0.3;
-          ctx.globalAlpha = opacity;
-          
+        if (p.visible && particle.opacity > 0) {
           ctx.beginPath();
-          ctx.arc(p.x, p.y, isActive ? 6 : 4, 0, Math.PI * 2);
-          ctx.fillStyle = isActive ? '#FFD700' : '#666666';
+          ctx.arc(p.x, p.y, particle.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 215, 0, ${particle.opacity})`;
           ctx.fill();
-          ctx.strokeStyle = isActive ? '#FFFFFF' : '#999999';
+        }
+      });
+      
+      // Dessiner les marqueurs avec effet de pulsation
+      locations.forEach((location, index) => {
+        const p = project(location.lon, location.lat, radius);
+        
+        if (p.visible) {
+          // Vérifier si la vague est passée
+          const isActive = waveProgress >= location.day && waveProgress <= location.day + 10;
+          const scale = isActive ? 1 + Math.sin(Date.now() * 0.005) * 0.3 : 1;
+          
+          // Cercle de base
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 8 * scale, 0, Math.PI * 2);
+          ctx.fillStyle = location.color;
+          ctx.fill();
+          ctx.strokeStyle = '#fff';
           ctx.lineWidth = 2;
           ctx.stroke();
           
-          // Label
-          if (p.z > 0) {
-            ctx.fillStyle = isActive ? '#FFD700' : '#999999';
-            ctx.font = `${12 * zoom}px Inter`;
-            ctx.textAlign = 'center';
-            ctx.fillText(loc.name, p.x, p.y - 12);
-            ctx.font = `${10 * zoom}px Inter`;
-            ctx.fillText(loc.date, p.x, p.y + 22);
+          // Onde de propagation si actif
+          if (isActive) {
+            const waveRadius = 20 + (Date.now() * 0.02) % 30;
+            const waveOpacity = 1 - (waveRadius - 20) / 30;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, waveRadius, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(255, 215, 0, ${waveOpacity * 0.5})`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
           }
           
-          ctx.globalAlpha = 1;
+          // Label
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 12px Inter';
+          ctx.textAlign = 'center';
+          ctx.fillText(location.name, p.x, p.y - 15);
+          
+          // Date si proche
+          if (Math.abs(waveProgress - location.day) < 20) {
+            ctx.font = '10px Inter';
+            ctx.fillStyle = location.color;
+            ctx.fillText(location.date, p.x, p.y + 25);
+          }
         }
       });
+      
+      // Indicateur de progression de la vague
+      const currentDate = new Date(2025, 0, 1);
+      currentDate.setDate(currentDate.getDate() + Math.floor(waveProgress));
+      
+      ctx.fillStyle = 'rgba(255, 215, 0, 0.8)';
+      ctx.font = 'bold 16px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText(
+        `Progression de la vague : ${currentDate.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}`,
+        centerX, height - 30
+      );
       
       // Rotation automatique
       if (!isDragging) {
         rotation -= 0.002;
       }
       
-      requestAnimationFrame(draw);
+      animationId = requestAnimationFrame(draw);
+    }
+    
+    function drawPolygon(coordinates) {
+      ctx.beginPath();
+      let firstPoint = true;
+      
+      coordinates.forEach(coord => {
+        const p = project(coord[0], coord[1], radius);
+        if (p.visible) {
+          if (firstPoint) {
+            ctx.moveTo(p.x, p.y);
+            firstPoint = false;
+          } else {
+            ctx.lineTo(p.x, p.y);
+          }
+        }
+      });
+      
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
     }
     
     draw();
   }
 </script>
-
 <section id="geojson-section" class="globe-section">
   <div class="container">
     <div class="section-header" class:visible>
@@ -357,6 +440,8 @@
     background: radial-gradient(circle at center, #0a192f 0%, #020c1b 100%);
     cursor: grab;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: scale(0.8);
   }
   
   .globe-canvas:active {
@@ -369,6 +454,11 @@
     font-size: 0.9rem;
     color: var(--color-primary);
     opacity: 0.7;
+  }
+  
+  .globe-info {
+    opacity: 0;
+    transform: translateX(50px);
   }
   
   .info-card h3 {
@@ -396,6 +486,24 @@
     background: rgba(255, 215, 0, 0.1);
     border-radius: 8px;
     border-left: 3px solid var(--color-primary);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .timeline-entry::before {
+    content: '';
+    position: absolute;
+    left: -100%;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+    animation: shimmer 3s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
   }
   
   .timeline-entry .date {

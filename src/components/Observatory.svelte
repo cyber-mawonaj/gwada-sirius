@@ -1,13 +1,83 @@
 <script>
   import { onMount } from 'svelte';
+  import anime from 'animejs/lib/anime.es.js';
   
   let visible = false;
+  let activePhase = 0;
+  
+  const observationPhases = [
+    {
+      time: '04h30',
+      title: 'Préparation',
+      description: 'Arrivez sur site, laissez vos yeux s\'adapter',
+      icon: '🌙'
+    },
+    {
+      time: '05h00',
+      title: 'Recherche',
+      description: 'Cherchez vers l\'Est-Sud-Est, près de l\'horizon',
+      icon: '🔭'
+    },
+    {
+      time: '05h15',
+      title: 'Apparition',
+      description: 'Sirius émerge de la lueur de l\'aube',
+      icon: '⭐'
+    },
+    {
+      time: '05h30',
+      title: 'Observation',
+      description: 'Moment optimal pour contempler',
+      icon: '✨'
+    }
+  ];
+  
+  const equipment = [
+    { item: 'Jumelles', essential: false, description: '7x50 ou 10x50 recommandées' },
+    { item: 'Lampe rouge', essential: true, description: 'Préserve la vision nocturne' },
+    { item: 'Boussole', essential: true, description: 'Pour trouver l\'Est' },
+    { item: 'Vêtements chauds', essential: true, description: 'Les matins sont frais' },
+    { item: 'Carnet de notes', essential: false, description: 'Pour documenter l\'observation' }
+  ];
   
   onMount(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           visible = true;
+          
+          // Animation d'entrée
+          anime.timeline({
+            easing: 'easeOutQuad'
+          })
+          .add({
+            targets: '.section-header',
+            translateY: [30, 0],
+            opacity: [0, 1],
+            duration: 800
+          })
+          .add({
+            targets: '.timeline-container',
+            translateX: [-50, 0],
+            opacity: [0, 1],
+            duration: 1000
+          }, '-=400')
+          .add({
+            targets: '.timeline-phase',
+            scale: [0.8, 1],
+            opacity: [0, 1],
+            duration: 600,
+            delay: anime.stagger(150)
+          }, '-=600')
+          .add({
+            targets: '.equipment-grid',
+            translateY: [50, 0],
+            opacity: [0, 1],
+            duration: 800
+          }, '-=400');
+          
+          // Animation de la timeline automatique
+          startTimelineAnimation();
         }
       });
     });
@@ -18,41 +88,42 @@
     return () => observer.disconnect();
   });
   
-  const steps = [
-    {
-      number: 1,
-      title: 'Choisir le Site',
-      description: 'Trouvez un lieu avec un horizon Est dégagé, loin des lumières urbaines.',
-      icon: '🏖️'
-    },
-    {
-      number: 2,
-      title: 'Se Préparer',
-      description: 'Utilisez Stellarium pour repérer Sirius. Arrivez 20 minutes en avance.',
-      icon: '🔭'
-    },
-    {
-      number: 3,
-      title: 'Observer',
-      description: 'Regardez vers l\'Est-Sud-Est. Sirius apparaîtra brillante et scintillante.',
-      icon: '👁️'
-    },
-    {
-      number: 4,
-      title: 'Être Patient',
-      description: 'La météo peut changer. Observez sur plusieurs jours pour maximiser vos chances.',
-      icon: '⏳'
-    }
-  ];
+  function startTimelineAnimation() {
+    // Progression automatique de la timeline
+    const timeline = anime.timeline({
+      loop: true,
+      autoplay: true
+    });
+    
+    observationPhases.forEach((phase, index) => {
+      timeline.add({
+        targets: {},
+        duration: 3000,
+        changeBegin: () => {
+          activePhase = index;
+          animatePhaseChange(index);
+        }
+      });
+    });
+  }
   
-  const equipment = [
-    { item: 'Vos yeux', essential: true, description: 'L\'outil le plus important!' },
-    { item: 'Jumelles', essential: false, description: 'Utiles mais optionnelles' },
-    { item: 'Boussole/App', essential: true, description: 'Pour trouver l\'Est' },
-    { item: 'Vêtements chauds', essential: true, description: 'Les matins sont frais' },
-    { item: 'Lampe rouge', essential: false, description: 'Préserve la vision nocturne' },
-    { item: 'Carnet de notes', essential: false, description: 'Pour documenter l\'observation' }
-  ];
+  function animatePhaseChange(index) {
+    // Animation de l'indicateur actif
+    anime({
+      targets: '.timeline-indicator',
+      left: `${index * 25}%`,
+      duration: 800,
+      easing: 'easeInOutQuad'
+    });
+    
+    // Pulsation de la phase active
+    anime({
+      targets: `.timeline-phase:nth-child(${index + 1}) .phase-icon`,
+      scale: [1, 1.2, 1],
+      duration: 600,
+      easing: 'easeInOutQuad'
+    });
+  }
 </script>
 
 <section id="observatory" class="observatory">
@@ -60,70 +131,75 @@
     <div class="section-header" class:visible>
       <h2>Guide d'Observation</h2>
       <p class="section-subtitle">
-        Votre manuel pratique pour réussir l'observation du lever héliaque
+        Tout ce qu'il faut savoir pour observer le lever héliaque
       </p>
     </div>
     
-    <div class="guide-content" class:visible>
-      <div class="steps-section">
-        <h3>Les Étapes Clés</h3>
-        <div class="steps-grid">
-          {#each steps as step}
-            <div class="step-card card">
-              <div class="step-number">{step.number}</div>
-              <div class="step-icon">{step.icon}</div>
-              <h4>{step.title}</h4>
-              <p>{step.description}</p>
+    <div class="observatory-content" class:visible>
+      <!-- Timeline d'observation -->
+      <div class="timeline-container">
+        <h3>Chronologie de l'Observation</h3>
+        <div class="timeline">
+          <div class="timeline-track"></div>
+          <div class="timeline-indicator"></div>
+          {#each observationPhases as phase, i}
+            <div class="timeline-phase" class:active={activePhase === i}>
+              <div class="phase-icon">{phase.icon}</div>
+              <div class="phase-time">{phase.time}</div>
+              <div class="phase-info">
+                <h4>{phase.title}</h4>
+                <p>{phase.description}</p>
+              </div>
             </div>
           {/each}
         </div>
       </div>
       
+      <!-- Équipement recommandé -->
       <div class="equipment-section">
         <h3>Équipement Recommandé</h3>
         <div class="equipment-grid">
-          {#each equipment as equip}
-            <div class="equipment-item" class:essential={equip.essential}>
-              <div class="equipment-icon">
-                {equip.essential ? '⭐' : '○'}
+          {#each equipment as item, i}
+            <div 
+              class="equipment-card" 
+              class:essential={item.essential}
+              style="animation-delay: {i * 0.1}s"
+            >
+              <div class="equipment-header">
+                <span class="equipment-name">{item.item}</span>
+                {#if item.essential}
+                  <span class="essential-badge">Essentiel</span>
+                {/if}
               </div>
-              <div class="equipment-info">
-                <h5>{equip.item}</h5>
-                <p>{equip.description}</p>
-              </div>
+              <p class="equipment-desc">{item.description}</p>
             </div>
           {/each}
         </div>
       </div>
       
-      <div class="stellarium-guide card">
-        <h3>Mini-Guide Stellarium</h3>
-        <ol>
-          <li><strong>Télécharger :</strong> stellarium.org (gratuit)</li>
-          <li><strong>Configurer le lieu (F6) :</strong> Entrez les coordonnées de votre site</li>
-          <li><strong>Régler la date (F5) :</strong> Choisissez le 22 juillet 2025, 5h00</li>
-          <li><strong>Chercher Sirius (F3) :</strong> Le logiciel pointera l'étoile</li>
-          <li><strong>Simuler :</strong> Avancez le temps pour voir le lever</li>
-        </ol>
-      </div>
-      
+      <!-- Conseils pratiques -->
       <div class="tips-section">
-        <h3>Conseils d'Expert</h3>
+        <h3>Conseils Pratiques</h3>
         <div class="tips-grid">
-          <div class="tip-card card">
+          <div class="tip-card">
             <div class="tip-icon">🌤️</div>
-            <h4>Météo</h4>
-            <p>Surveillez les prévisions. Un ciel dégagé et sec est idéal.</p>
+            <h4>Météo Idéale</h4>
+            <p>Ciel dégagé à l'Est, pas de nuages bas, humidité modérée</p>
           </div>
-          <div class="tip-card card">
-            <div class="tip-icon">📍</div>
-            <h4>Position</h4>
-            <p>Sirius se lève à environ 105° (Est-Sud-Est) en Guadeloupe.</p>
+          <div class="tip-card">
+            <div class="tip-icon">🌑</div>
+            <h4>Phase Lunaire</h4>
+            <p>Nouvelle lune ou croissant fin pour un ciel plus sombre</p>
           </div>
-          <div class="tip-card card">
+          <div class="tip-card">
+            <div class="tip-icon">📱</div>
+            <h4>Applications Utiles</h4>
+            <p>Stellarium, SkySafari, Star Walk pour repérer les constellations</p>
+          </div>
+          <div class="tip-card">
             <div class="tip-icon">👥</div>
-            <h4>Groupe</h4>
-            <p>Observez à plusieurs pour confirmer la première visibilité.</p>
+            <h4>En Groupe</h4>
+            <p>Partagez ce moment unique avec famille et amis</p>
           </div>
         </div>
       </div>
@@ -134,148 +210,186 @@
 <style>
   .observatory {
     padding: var(--spacing-xl) 0;
-    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    background: var(--gradient-dawn);
   }
   
-  .guide-content {
+  .observatory-content {
+    margin-top: var(--spacing-lg);
+  }
+  
+  /* Timeline */
+  .timeline-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 3rem;
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease-out 0.3s;
   }
   
-  .guide-content.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  
-  .guide-content h3 {
+  .timeline-container h3 {
     color: var(--color-primary);
-    font-size: 1.8rem;
-    margin-bottom: var(--spacing-md);
     text-align: center;
+    margin-bottom: 2rem;
   }
   
-  /* Steps */
-  .steps-section {
-    margin-bottom: var(--spacing-xl);
-  }
-  
-  .steps-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-md);
-  }
-  
-  .step-card {
+  .timeline {
     position: relative;
-    text-align: center;
-    padding-top: 3rem;
-  }
-  
-  .step-number {
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px;
-    height: 40px;
-    background: var(--gradient-sunrise);
-    color: var(--color-dark);
-    border-radius: 50%;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1.2rem;
+    justify-content: space-between;
+    padding: 2rem 0;
   }
   
-  .step-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+  .timeline-track {
+    position: absolute;
+    top: 3rem;
+    left: 5%;
+    right: 5%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
   }
   
-  .step-card h4 {
+  .timeline-indicator {
+    position: absolute;
+    top: 3rem;
+    left: 0;
+    width: 25%;
+    height: 4px;
+    background: var(--color-primary);
+    border-radius: 2px;
+    transition: left 0.8s ease-in-out;
+  }
+  
+  .timeline-phase {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  
+  .phase-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    filter: grayscale(1);
+    opacity: 0.5;
+    transition: all 0.3s ease;
+  }
+  
+  .timeline-phase.active .phase-icon {
+    filter: grayscale(0);
+    opacity: 1;
+  }
+  
+  .phase-time {
+    font-weight: 600;
     color: var(--color-primary);
     margin-bottom: 0.5rem;
   }
   
-  /* Equipment */
+  .phase-info h4 {
+    color: var(--color-light);
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+  }
+  
+  .phase-info p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+  
+  /* Équipement */
   .equipment-section {
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: 3rem;
+  }
+  
+  .equipment-section h3 {
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 2rem;
   }
   
   .equipment-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--spacing-sm);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    opacity: 0;
   }
   
-  .equipment-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
+  .equipment-card {
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    transition: var(--transition-base);
+    border-radius: 15px;
+    padding: 1.5rem;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.8s ease-out forwards;
   }
   
-  .equipment-item:hover {
-    background: rgba(255, 255, 255, 0.1);
+  .equipment-card.essential {
+    border-color: var(--color-primary);
+    background: rgba(255, 215, 0, 0.05);
   }
   
-  .equipment-icon {
-    font-size: 1.5rem;
+  .equipment-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.08);
   }
   
-  .equipment-item.essential .equipment-icon {
-    color: var(--color-primary);
+  .equipment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
   }
   
-  .equipment-info h5 {
+  .equipment-name {
+    font-weight: 600;
     color: var(--color-light);
-    margin-bottom: 0.25rem;
   }
   
-  .equipment-info p {
+  .essential-badge {
+    background: var(--color-primary);
+    color: var(--color-dark);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  
+  .equipment-desc {
     font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
+    opacity: 0.8;
   }
   
-  /* Stellarium Guide */
-  .stellarium-guide {
-    margin-bottom: var(--spacing-xl);
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+  /* Conseils */
+  .tips-section h3 {
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 2rem;
   }
   
-  .stellarium-guide h3 {
-    margin-bottom: 1rem;
-  }
-  
-  .stellarium-guide ol {
-    padding-left: 1.5rem;
-  }
-  
-  .stellarium-guide li {
-    margin-bottom: 0.75rem;
-    line-height: 1.6;
-  }
-  
-  /* Tips */
   .tips-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-md);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
   }
   
   .tip-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 1.5rem;
     text-align: center;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+  
+  .tip-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.08);
   }
   
   .tip-icon {
-    font-size: 3rem;
+    font-size: 2.5rem;
     margin-bottom: 1rem;
   }
   
@@ -284,8 +398,37 @@
     margin-bottom: 0.5rem;
   }
   
+  .tip-card p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
   @media (max-width: 768px) {
-    .steps-grid {
+    .timeline {
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .timeline-track {
+      display: none;
+    }
+    
+    .timeline-indicator {
+      display: none;
+    }
+    
+    .equipment-grid, .tips-grid {
       grid-template-columns: 1fr;
     }
   }

@@ -1,83 +1,52 @@
 <script>
   import { onMount } from 'svelte';
+  import { t } from '../lib/i18n.js';
+  import anime from 'animejs/lib/anime.es.js';
   
-  let selectedLocation = 'Pointe des Châteaux';
-  let selectedYear = '2025';
   let visible = false;
+  let selectedLocation = 'moule';
+  let calculationInProgress = false;
+  let results = null;
   
-  const predictionsData = {
-    "Pointe des Châteaux": {
-      coords: "16.2476°N, 61.1771°O",
-      "2025": { date: "22 juillet", time: "05:12" },
-      "2026": { date: "22 juillet", time: "05:12" },
-      "2027": { date: "22 juillet", time: "05:13" },
-      "2028": { date: "21 juillet", time: "05:13" },
-      "2029": { date: "22 juillet", time: "05:14" }
-    },
-    "Pointe de la Grande Vigie": {
-      coords: "16.5098°N, 61.4666°O",
-      "2025": { date: "22 juillet", time: "05:11" },
-      "2026": { date: "22 juillet", time: "05:12" },
-      "2027": { date: "22 juillet", time: "05:12" },
-      "2028": { date: "21 juillet", time: "05:12" },
-      "2029": { date: "22 juillet", time: "05:13" }
-    },
-    "Duzer (Sainte-Rose)": {
-      coords: "16.3361°N, 61.7430°O",
-      "2025": { date: "22 juillet", time: "05:13" },
-      "2026": { date: "22 juillet", time: "05:14" },
-      "2027": { date: "22 juillet", time: "05:14" },
-      "2028": { date: "21 juillet", time: "05:14" },
-      "2029": { date: "22 juillet", time: "05:15" }
-    },
-    "Saint-Félix (Le Gosier)": {
-      coords: "16.2005°N, 61.4605°O",
-      "2025": { date: "22 juillet", time: "05:13" },
-      "2026": { date: "22 juillet", time: "05:13" },
-      "2027": { date: "22 juillet", time: "05:14" },
-      "2028": { date: "21 juillet", time: "05:14" },
-      "2029": { date: "22 juillet", time: "05:15" }
-    },
-    "Grande Pointe (Trois-Rivières)": {
-      coords: "15.9696°N, 61.6308°O",
-      "2025": { date: "22 juillet", time: "05:13" },
-      "2026": { date: "22 juillet", time: "05:14" },
-      "2027": { date: "22 juillet", time: "05:14" },
-      "2028": { date: "21 juillet", time: "05:15" },
-      "2029": { date: "22 juillet", time: "05:15" }
-    },
-    "Petit-Pérou": {
-      coords: "16.0517°N, 61.5567°O",
-      "2025": { date: "22 juillet", time: "05:14" },
-      "2026": { date: "22 juillet", time: "05:14" },
-      "2027": { date: "22 juillet", time: "05:15" },
-      "2028": { date: "21 juillet", time: "05:15" },
-      "2029": { date: "22 juillet", time: "05:16" }
-    },
-    "Pointe du Vieux-Fort": {
-      coords: "15.9483°N, 61.7072°O",
-      "2025": { date: "22 juillet", time: "05:14" },
-      "2026": { date: "22 juillet", time: "05:14" },
-      "2027": { date: "22 juillet", time: "05:15" },
-      "2028": { date: "21 juillet", time: "05:15" },
-      "2029": { date: "22 juillet", time: "05:16" }
-    }
-  };
-  
-  $: currentPrediction = predictionsData[selectedLocation][selectedYear];
-  $: observationWindow = calculateWindow(currentPrediction.date);
-  
-  function calculateWindow(dateStr) {
-    const day = parseInt(dateStr.split(' ')[0]);
-    const month = dateStr.split(' ')[1];
-    return `${day - 2} au ${day + 2} ${month}`;
-  }
+  const locations = [
+    { id: 'moule', name: 'Le Moule', lat: 16.3333, lng: -61.3472 },
+    { id: 'deshaies', name: 'Deshaies', lat: 16.3039, lng: -61.7966 },
+    { id: 'sainte-anne', name: 'Sainte-Anne', lat: 16.2262, lng: -61.3809 },
+    { id: 'port-louis', name: 'Port-Louis', lat: 16.4180, lng: -61.5312 },
+    { id: 'marie-galante', name: 'Marie-Galante', lat: 15.9500, lng: -61.2667 },
+    { id: 'soufriere', name: 'Route de la Soufrière', lat: 16.0439, lng: -61.6639 },
+    { id: 'petite-terre', name: 'Petite-Terre', lat: 16.1700, lng: -61.1200 }
+  ];
   
   onMount(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           visible = true;
+          
+          // Animation d'entrée
+          anime.timeline({
+            easing: 'easeOutQuad'
+          })
+          .add({
+            targets: '.section-header',
+            translateY: [30, 0],
+            opacity: [0, 1],
+            duration: 800
+          })
+          .add({
+            targets: '.calculator-container',
+            translateY: [50, 0],
+            opacity: [0, 1],
+            duration: 1000
+          }, '-=400')
+          .add({
+            targets: '.location-option',
+            translateX: [-20, 0],
+            opacity: [0, 1],
+            duration: 600,
+            delay: anime.stagger(50)
+          }, '-=600');
         }
       });
     });
@@ -87,104 +56,200 @@
     
     return () => observer.disconnect();
   });
+  
+  function selectLocation(id) {
+    selectedLocation = id;
+    calculate();
+    
+    // Animation de sélection
+    anime({
+      targets: `.location-option`,
+      scale: 1,
+      duration: 300
+    });
+    
+    anime({
+      targets: `[data-location="${id}"]`,
+      scale: 1.05,
+      duration: 300,
+      easing: 'easeOutElastic(1, .5)'
+    });
+  }
+  
+  function calculate() {
+    calculationInProgress = true;
+    results = null;
+    
+    // Animation du calcul
+    anime({
+      targets: '.calculating-indicator',
+      opacity: [0, 1],
+      duration: 300
+    });
+    
+    // Animation des étoiles pendant le calcul
+    anime({
+      targets: '.star-indicator',
+      rotate: 360,
+      duration: 2000,
+      easing: 'linear',
+      loop: true
+    });
+    
+    setTimeout(() => {
+      const location = locations.find(l => l.id === selectedLocation);
+      
+      // Calculs simplifiés
+      const baseDate = new Date('2025-07-22');
+      const latitudeAdjustment = (location.lat - 16.25) * 0.5;
+      const heliacalDate = new Date(baseDate);
+      heliacalDate.setDate(baseDate.getDate() + Math.round(latitudeAdjustment));
+      
+      results = {
+        location: location.name,
+        heliacalDate: heliacalDate.toLocaleDateString('fr-FR', { 
+          day: 'numeric', 
+          month: 'long', 
+          year: 'numeric' 
+        }),
+        bestTime: '05h00 - 05h30',
+        duration: '15-20 minutes',
+        azimuth: '117° (ESE)',
+        altitude: '57.1°',
+        magnitude: '-1.46'
+      };
+      
+      calculationInProgress = false;
+      
+      // Animation des résultats
+      anime.timeline({
+        easing: 'easeOutQuad'
+      })
+      .add({
+        targets: '.calculating-indicator',
+        opacity: [1, 0],
+        duration: 300
+      })
+      .add({
+        targets: '.results-container',
+        translateY: [20, 0],
+        opacity: [0, 1],
+        duration: 600
+      })
+      .add({
+        targets: '.result-item',
+        translateX: [20, 0],
+        opacity: [0, 1],
+        duration: 400,
+        delay: anime.stagger(100)
+      }, '-=400')
+      .add({
+        targets: '.result-value',
+        scale: [0.8, 1],
+        duration: 600,
+        delay: anime.stagger(100),
+        easing: 'easeOutElastic(1, .5)'
+      }, '-=600');
+      
+    }, 1500);
+  }
+  
+  // Calculer automatiquement au chargement
+  onMount(() => {
+    setTimeout(() => {
+      if (visible) calculate();
+    }, 1000);
+  });
 </script>
 
 <section id="predictions" class="predictions">
-  <div class="pattern-bogolan"></div>
-  
   <div class="container">
     <div class="section-header" class:visible>
-      <h2>Calculateur de Lever Héliaque</h2>
+      <h2>{$t('predictions_title')}</h2>
       <p class="section-subtitle">
-        Trouvez la date précise pour votre site d'observation
+        {$t('predictions_subtitle')}
       </p>
     </div>
     
     <div class="calculator-container" class:visible>
-      <div class="calculator-inputs">
-        <div class="input-group">
-          <label for="location-select">Site d'observation</label>
-          <select id="location-select" bind:value={selectedLocation}>
-            {#each Object.keys(predictionsData) as location}
-              <option value={location}>{location}</option>
-            {/each}
-          </select>
-          <small class="coords">{predictionsData[selectedLocation].coords}</small>
-        </div>
-        
-        <div class="input-group">
-          <label for="year-select">Année</label>
-          <select id="year-select" bind:value={selectedYear}>
-            {#each ['2025', '2026', '2027', '2028', '2029'] as year}
-              <option value={year}>{year}</option>
-            {/each}
-          </select>
+      <div class="location-selector">
+        <h3>{$t('predictions_select_location')}</h3>
+        <div class="locations-grid">
+          {#each locations as location}
+            <button 
+              class="location-option"
+              class:active={selectedLocation === location.id}
+              data-location={location.id}
+              on:click={() => selectLocation(location.id)}
+            >
+              <span class="location-name">{location.name}</span>
+              <span class="location-coords">{location.lat}°N</span>
+            </button>
+          {/each}
         </div>
       </div>
       
-      <div class="prediction-result card">
-        <div class="result-header">
-          <h3>{selectedLocation}</h3>
-          <span class="year-badge">{selectedYear}</span>
-        </div>
+      <div class="results-section">
+        {#if calculationInProgress}
+          <div class="calculating-indicator">
+            <div class="star-indicator">⭐</div>
+            <p>Calcul en cours...</p>
+          </div>
+        {/if}
         
-        <div class="result-content">
-          <div class="date-display">
-            <div class="date-icon">📅</div>
-            <div class="date-text">
-              <div class="date-value">{currentPrediction.date}</div>
-              <div class="date-label">Date du lever héliaque</div>
+        {#if results && !calculationInProgress}
+          <div class="results-container">
+            <h3>{$t('predictions_results_for')} {results.location}</h3>
+            
+            <div class="results-grid">
+              <div class="result-item highlight">
+                <div class="result-icon">🌅</div>
+                <div class="result-label">{$t('predictions_heliacal_rising')}</div>
+                <div class="result-value">{results.heliacalDate}</div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-icon">⏰</div>
+                <div class="result-label">{$t('predictions_best_observation')}</div>
+                <div class="result-value">{results.bestTime}</div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-icon">⏱️</div>
+                <div class="result-label">{$t('predictions_visibility_duration')}</div>
+                <div class="result-value">{results.duration}</div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-icon">🧭</div>
+                <div class="result-label">{$t('predictions_azimuth')}</div>
+                <div class="result-value">{results.azimuth}</div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-icon">📐</div>
+                <div class="result-label">{$t('predictions_max_altitude')}</div>
+                <div class="result-value">{results.altitude}</div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-icon">✨</div>
+                <div class="result-label">{$t('predictions_magnitude')}</div>
+                <div class="result-value">{results.magnitude}</div>
+              </div>
+            </div>
+            
+            <div class="observation-tips">
+              <h4>💡 Conseils d'observation</h4>
+              <ul>
+                <li>Arrivez 30 minutes avant pour habituer vos yeux</li>
+                <li>Cherchez vers l'Est-Sud-Est (ESE)</li>
+                <li>Sirius apparaîtra comme l'étoile la plus brillante</li>
+                <li>Conditions idéales : ciel dégagé, sans Lune</li>
+              </ul>
             </div>
           </div>
-          
-          <div class="time-display">
-            <div class="time-icon">⏰</div>
-            <div class="time-text">
-              <div class="time-value">{currentPrediction.time}</div>
-              <div class="time-label">Heure locale (UTC-4)</div>
-            </div>
-          </div>
-          
-          <div class="window-display">
-            <div class="window-icon">👁️</div>
-            <div class="window-text">
-              <div class="window-value">{observationWindow}</div>
-              <div class="window-label">Fenêtre d'observation recommandée</div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="result-tip">
-          <p>💡 <strong>Conseil :</strong> Arrivez 20 minutes avant l'heure indiquée et observez vers l'Est-Sud-Est</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="info-cards" class:visible>
-      <div class="info-card card">
-        <h4>Conditions Idéales</h4>
-        <ul>
-          <li>Horizon Est dégagé</li>
-          <li>Ciel clair sans nuages</li>
-          <li>Faible pollution lumineuse</li>
-          <li>Temps sec (peu d'humidité)</li>
-        </ul>
-      </div>
-      
-      <div class="info-card card">
-        <h4>Équipement Recommandé</h4>
-        <ul>
-          <li>Jumelles (optionnel)</li>
-          <li>Application de boussole</li>
-          <li>Vêtements chauds</li>
-          <li>Stellarium (préparation)</li>
-        </ul>
-      </div>
-      
-      <div class="info-card card">
-        <h4>Météo & Visibilité</h4>
-        <p>La brume de sable sahélienne peut retarder la visibilité. 
-        Surveillez les prévisions météo et privilégiez les matins secs.</p>
+        {/if}
       </div>
     </div>
   </div>
@@ -192,191 +257,176 @@
 
 <style>
   .predictions {
-    position: relative;
     padding: var(--spacing-xl) 0;
-    background: var(--gradient-dawn);
-  }
-  
-  .pattern-bogolan {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
+    background: var(--gradient-night);
+    position: relative;
+    overflow: hidden;
   }
   
   .calculator-container {
-    position: relative;
-    z-index: 1;
-    max-width: 800px;
-    margin: 0 auto var(--spacing-lg);
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease-out 0.3s;
+    margin-top: var(--spacing-lg);
   }
   
-  .calculator-container.visible {
-    opacity: 1;
-    transform: translateY(0);
+  .location-selector {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
   }
   
-  .calculator-inputs {
+  .location-selector h3 {
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .locations-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-md);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
   }
   
-  .input-group {
+  .location-option {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid transparent;
+    border-radius: 15px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 0.5rem;
   }
   
-  .input-group label {
-    font-weight: 600;
-    color: var(--color-primary);
-  }
-  
-  .input-group select {
-    padding: 0.75rem;
+  .location-option:hover {
     background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 215, 0, 0.3);
-    border-radius: 10px;
-    color: var(--color-light);
-    font-size: 1rem;
-    transition: var(--transition-base);
-  }
-  
-  .input-group select:focus {
-    outline: none;
     border-color: var(--color-primary);
-    background: rgba(255, 255, 255, 0.15);
   }
   
-  .coords {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.6);
-  }
-  
-  .prediction-result {
+  .location-option.active {
     background: rgba(255, 215, 0, 0.1);
     border-color: var(--color-primary);
-    margin-bottom: var(--spacing-lg);
   }
   
-  .result-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
-  }
-  
-  .result-header h3 {
-    color: var(--color-primary);
-    margin: 0;
-  }
-  
-  .year-badge {
-    background: var(--gradient-sunrise);
-    color: var(--color-dark);
-    padding: 0.25rem 1rem;
-    border-radius: 20px;
+  .location-name {
     font-weight: 600;
+    color: var(--color-light);
   }
   
-  .result-content {
-    display: grid;
-    gap: var(--spacing-sm);
+  .location-coords {
+    font-size: 0.9rem;
+    color: var(--color-primary);
+    opacity: 0.8;
   }
   
-  .date-display,
-  .time-display,
-  .window-display {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
+  .calculating-indicator {
+    text-align: center;
+    padding: 3rem;
+    opacity: 0;
   }
   
-  .date-icon,
-  .time-icon,
-  .window-icon {
-    font-size: 2rem;
+  .star-indicator {
+    font-size: 3rem;
+    display: inline-block;
+    margin-bottom: 1rem;
   }
   
-  .date-value,
-  .time-value,
-  .window-value {
+  .results-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 2rem;
+    opacity: 0;
+  }
+  
+  .results-container h3 {
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 2rem;
     font-size: 1.5rem;
+  }
+  
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .result-item {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    opacity: 0;
+  }
+  
+  .result-item.highlight {
+    background: rgba(255, 215, 0, 0.1);
+    border: 2px solid var(--color-primary);
+  }
+  
+  .result-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .result-label {
+    font-size: 0.9rem;
+    color: var(--color-light);
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+  }
+  
+  .result-value {
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--color-primary);
   }
   
-  .date-label,
-  .time-label,
-  .window-label {
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.7);
+  .observation-tips {
+    background: rgba(255, 215, 0, 0.05);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-top: 2rem;
   }
   
-  .result-tip {
-    margin-top: var(--spacing-sm);
-    padding: 1rem;
-    background: rgba(255, 107, 53, 0.2);
-    border-radius: 10px;
-    border-left: 4px solid var(--color-accent);
-  }
-  
-  .info-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-md);
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s ease-out 0.6s;
-  }
-  
-  .info-cards.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  
-  .info-card h4 {
+  .observation-tips h4 {
     color: var(--color-primary);
     margin-bottom: 1rem;
   }
   
-  .info-card ul {
+  .observation-tips ul {
     list-style: none;
     padding: 0;
   }
   
-  .info-card li {
+  .observation-tips li {
     padding: 0.5rem 0;
     padding-left: 1.5rem;
     position: relative;
   }
   
-  .info-card li::before {
-    content: '✦';
+  .observation-tips li::before {
+    content: "✦";
     position: absolute;
     left: 0;
     color: var(--color-primary);
   }
   
   @media (max-width: 768px) {
-    .calculator-inputs {
+    .locations-grid {
       grid-template-columns: 1fr;
     }
     
-    .result-header {
-      flex-direction: column;
-      gap: 1rem;
-      text-align: center;
+    .results-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .location-selector, .results-container {
+      padding: 1.5rem;
     }
   }
 </style>

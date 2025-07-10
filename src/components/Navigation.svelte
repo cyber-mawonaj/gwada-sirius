@@ -1,14 +1,56 @@
 <script>
   import { t } from '../lib/i18n.js';
   import LanguageSelector from './LanguageSelector.svelte';
+  import anime from 'animejs/lib/anime.es.js';
+  import { onMount } from 'svelte';
   
   export let activeSection = 'home';
   
   let isMenuOpen = false;
+  let navbar;
   
   const toggleMenu = () => {
     isMenuOpen = !isMenuOpen;
+    
+    if (isMenuOpen) {
+      anime({
+        targets: '.nav-menu',
+        translateX: [300, 0],
+        opacity: [0, 1],
+        duration: 400,
+        easing: 'easeOutQuad'
+      });
+      
+      anime({
+        targets: '.nav-menu li',
+        translateX: [50, 0],
+        opacity: [0, 1],
+        duration: 600,
+        delay: anime.stagger(50),
+        easing: 'easeOutQuad'
+      });
+    }
   };
+  
+  onMount(() => {
+    // Animation d'entrée de la navbar
+    anime({
+      targets: navbar,
+      translateY: [-100, 0],
+      opacity: [0, 1],
+      duration: 800,
+      easing: 'easeOutQuad'
+    });
+    
+    // Animation du logo
+    anime({
+      targets: '.logo-icon',
+      rotate: [0, 360],
+      duration: 2000,
+      delay: 500,
+      easing: 'easeInOutQuad'
+    });
+  });
   
   const menuItems = [
     { id: 'home', label: 'nav_home', icon: '🌟' },
@@ -25,7 +67,7 @@
   };
 </script>
 
-<nav class="navbar" class:scrolled={activeSection !== 'home'}>
+<nav class="navbar" class:scrolled={activeSection !== 'home'} bind:this={navbar}>
   <div class="container">
     <div class="nav-content">
       <a href="#home" class="logo" on:click|preventDefault={() => scrollToSection('home')}>

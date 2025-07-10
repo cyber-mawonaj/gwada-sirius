@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { initLanguage } from './lib/i18n.js';
+  import Loader from './components/Loader.svelte';
   import Hero from './components/Hero.svelte';
   import Navigation from './components/Navigation.svelte';
   import About from './components/About.svelte';
@@ -43,6 +44,7 @@
   });
 </script>
 
+<Loader />
 <Navigation {activeSection} />
 
 <main>
