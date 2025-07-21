@@ -52,30 +52,7 @@
     }, '-=400');
     
     // Animation des patterns africains
-    anime({
-      targets: '.pattern-kente',
-      translateX: [0, 200],
-      duration: 30000,
-      easing: 'linear',
-      loop: true
-    });
-    
-    anime({
-      targets: '.pattern-adinkra',
-      rotate: 360,
-      duration: 40000,
-      easing: 'linear',
-      loop: true
-    });
-    
-    anime({
-      targets: '.pattern-bogolan',
-      scale: [1, 1.2, 1],
-      opacity: [0.05, 0.15, 0.05],
-      duration: 20000,
-      easing: 'easeInOutSine',
-      loop: true
-    });
+    // Animation du système solaire gérée par CSS
     
     // Attendre que le DOM soit prêt
     setTimeout(() => {
@@ -219,10 +196,28 @@
   <canvas bind:this={starsCanvas} class="stars-canvas"></canvas>
   
   <div class="hero-pattern">
-    <!-- Patterns africains visibles -->
-    <div class="pattern-overlay pattern-kente"></div>
-    <div class="pattern-overlay pattern-adinkra"></div>
-    <div class="pattern-overlay pattern-bogolan"></div>
+    <!-- Système solaire à gauche -->
+    <div class="solar-system">
+      <div class="sun"></div>
+      <div class="orbit orbit-1">
+        <div class="planet planet-1"></div>
+      </div>
+      <div class="orbit orbit-2">
+        <div class="planet planet-2"></div>
+      </div>
+      <div class="orbit orbit-3">
+        <div class="planet planet-3"></div>
+      </div>
+      <div class="orbit orbit-4">
+        <div class="planet planet-4"></div>
+      </div>
+      <div class="orbit orbit-5">
+        <div class="planet planet-5"></div>
+      </div>
+      <div class="orbit orbit-sirius">
+        <div class="planet sirius"></div>
+      </div>
+    </div>
   </div>
   
   <div class="hero-content">
@@ -303,46 +298,154 @@
     mix-blend-mode: overlay;
   }
   
-  .pattern-kente {
-    background-image: 
-      repeating-linear-gradient(
-        45deg,
-        var(--color-primary) 0px,
-        var(--color-primary) 10px,
-        transparent 10px,
-        transparent 20px,
-        var(--color-secondary) 20px,
-        var(--color-secondary) 30px,
-        transparent 30px,
-        transparent 40px
-      ),
-      repeating-linear-gradient(
-        -45deg,
-        var(--color-accent) 0px,
-        var(--color-accent) 10px,
-        transparent 10px,
-        transparent 20px
-      );
+  
+  .solar-system {
+    position: absolute;
+    left: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 400px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    opacity: 0.8 !important;
+    mix-blend-mode: normal !important;
+  }
+
+  .sun {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #FFD700, #FFA500);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #FFD700, 0 0 40px #FFA500;
+    z-index: 10;
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  .orbit {
+    position: absolute;
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 50%;
+    animation: rotate linear infinite;
+  }
+
+  .orbit-1 {
+    width: 80px;
+    height: 80px;
+    animation-duration: 8s;
+  }
+
+  .orbit-2 {
+    width: 120px;
+    height: 120px;
+    animation-duration: 12s;
+  }
+
+  .orbit-3 {
+    width: 160px;
+    height: 160px;
+    animation-duration: 16s;
+  }
+
+  .orbit-4 {
+    width: 200px;
+    height: 200px;
+    animation-duration: 20s;
+  }
+
+  .orbit-5 {
+    width: 240px;
+    height: 240px;
+    animation-duration: 24s;
+  }
+
+  .orbit-sirius {
+    width: 300px;
+    height: 300px;
+    animation-duration: 30s;
+    border-color: rgba(135, 206, 250, 0.3);
+  }
+
+  .planet {
+    position: absolute;
+    border-radius: 50%;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .planet-1 {
+    width: 4px;
+    height: 4px;
+    background: #8C7853;
+  }
+
+  .planet-2 {
+    width: 6px;
+    height: 6px;
+    background: #FFC649;
+  }
+
+  .planet-3 {
+    width: 6px;
+    height: 6px;
+    background: #6B93D6;
+  }
+
+  .planet-4 {
+    width: 5px;
+    height: 5px;
+    background: #C1440E;
+  }
+
+  .planet-5 {
+    width: 8px;
+    height: 8px;
+    background: #D8CA9D;
+  }
+
+  .sirius {
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, #87CEEB, #4169E1);
+    box-shadow: 0 0 10px #87CEEB, 0 0 20px #4169E1;
+    animation: twinkle 2s ease-in-out infinite;
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+  }
+
+  @keyframes twinkle {
+    0%, 100% {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: translateX(-50%) scale(1.2);
+    }
   }
   
-  .pattern-adinkra {
-    background-image: 
-      radial-gradient(circle at 20% 20%, var(--color-primary) 2px, transparent 2px),
-      radial-gradient(circle at 80% 80%, var(--color-secondary) 2px, transparent 2px),
-      radial-gradient(circle at 50% 50%, var(--color-accent) 3px, transparent 3px);
-    background-size: 50px 50px;
-  }
-  
-  .pattern-bogolan {
-    background-image: 
-      repeating-conic-gradient(
-        from 0deg at 50% 50%,
-        var(--color-primary) 0deg 10deg,
-        transparent 10deg 20deg
-      );
-    background-size: 100px 100px;
-    opacity: 0.05;
-  }
   
   .hero-content {
     position: relative;
