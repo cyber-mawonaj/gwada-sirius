@@ -67,21 +67,28 @@ import anime from '../lib/anime.js';
     } catch (error) {
       console.error('Erreur chargement GeoJSON:', error);
     }
-    // Données des lieux avec animation de vague
+    // Données des lieux avec animation de vague (juin à septembre)
     const locations = [
-      { name: 'La Réunion', lat: -21.1151, lon: 55.5364, date: '27 Juin', color: '#FF6B35', day: 178 },
-      { name: 'Kinshasa', lat: -4.4419, lon: 15.2663, date: '16 Juillet', color: '#FFA500', day: 197 },
-      { name: 'Guadeloupe', lat: 16.2650, lon: -61.5510, date: '22 Juillet', color: '#FFD700', day: 203 },
-      { name: 'Martinique', lat: 14.6415, lon: -61.0242, date: '23 Juillet', color: '#FFD700', day: 204 },
-      { name: 'Dakar', lat: 14.7167, lon: -17.4677, date: '23 Juillet', color: '#FFE44D', day: 204 },
-      { name: 'Le Caire', lat: 30.0444, lon: 31.2357, date: '3 Août', color: '#FFFACD', day: 215 }
+      { name: 'La Réunion', lat: -21.1151, lon: 55.5364, date: '27 Juin', color: '#FF6B35', day: 0 },
+      { name: 'Kinshasa', lat: -4.4419, lon: 15.2663, date: '16 Juillet', color: '#FFA500', day: 19 },
+      { name: 'Douala', lat: 4.0511, lon: 9.7679, date: '18 Juillet', color: '#FFA500', day: 21 },
+      { name: 'Yaoundé', lat: 3.8480, lon: 11.5021, date: '19 Juillet', color: '#FFA500', day: 22 },
+      { name: 'Abidjan', lat: 5.3600, lon: -4.0083, date: '20 Juillet', color: '#FFD700', day: 23 },
+      { name: 'Accra', lat: 5.6037, lon: -0.1870, date: '21 Juillet', color: '#FFD700', day: 24 },
+      { name: 'Guadeloupe', lat: 16.2650, lon: -61.5510, date: '22 Juillet', color: '#FFD700', day: 25 },
+      { name: 'Martinique', lat: 14.6415, lon: -61.0242, date: '23 Juillet', color: '#FFD700', day: 26 },
+      { name: 'Dakar', lat: 14.7167, lon: -17.4677, date: '23 Juillet', color: '#FFE44D', day: 26 },
+      { name: 'Cayenne', lat: 4.9346, lon: -52.3281, date: '24 Juillet', color: '#FFE44D', day: 27 },
+      { name: 'Bamako', lat: 12.6392, lon: -8.0029, date: '25 Juillet', color: '#FFE44D', day: 28 },
+      { name: 'Le Caire', lat: 30.0444, lon: 31.2357, date: '3 Août', color: '#FFFACD', day: 37 },
+      { name: 'Paris', lat: 48.8566, lon: 2.3522, date: '15 Août', color: '#F0F8FF', day: 49 }
     ];
     
-    // Animation de la progression de la vague
+    // Animation de la progression de la vague (juin à septembre)
     anime({
       targets: { progress: 0 },
-      progress: 365,
-      duration: 30000,
+      progress: 92, // Juin (jour 152) à septembre (jour 244) = 92 jours
+      duration: 12000, // 12 secondes pour 4 mois
       easing: 'linear',
       loop: true,
       update: function(anim) {
@@ -313,7 +320,8 @@ import anime from '../lib/anime.js';
       });
       
       // Indicateur de progression de la vague
-      const currentDate = new Date(2025, 0, 1);
+      const startDate = new Date(2025, 5, 27); // 27 juin 2025
+      const currentDate = new Date(startDate);
       currentDate.setDate(currentDate.getDate() + Math.floor(waveProgress));
       
       ctx.fillStyle = 'rgba(255, 215, 0, 0.8)';
@@ -393,16 +401,20 @@ import anime from '../lib/anime.js';
               <span class="location">La Réunion</span>
             </div>
             <div class="timeline-entry">
-              <span class="date">16 Juillet</span>
-              <span class="location">Kinshasa</span>
+              <span class="date">16-19 Juillet</span>
+              <span class="location">Kinshasa, Douala, Yaoundé</span>
             </div>
             <div class="timeline-entry">
-              <span class="date">22-23 Juillet</span>
-              <span class="location">Guadeloupe & Martinique</span>
+              <span class="date">20-24 Juillet</span>
+              <span class="location">Abidjan, Accra, Antilles, Cayenne</span>
             </div>
             <div class="timeline-entry">
-              <span class="date">3 Août</span>
-              <span class="location">Le Caire</span>
+              <span class="date">25 Juillet</span>
+              <span class="location">Bamako, Dakar</span>
+            </div>
+            <div class="timeline-entry">
+              <span class="date">3-15 Août</span>
+              <span class="location">Le Caire, Paris</span>
             </div>
           </div>
         </div>
