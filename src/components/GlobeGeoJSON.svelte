@@ -1,6 +1,7 @@
 <script>
 import { onMount } from 'svelte';
 import anime from '../lib/anime.js';
+import { t } from '../lib/i18n.js';
   
   let canvas;
   let visible = false;
@@ -426,51 +427,51 @@ import anime from '../lib/anime.js';
 <section id="associations" class="associations-section">
   <div class="container">
     <div class="section-header">
-      <h2>Associations qui fêtent le Wep Ronpet</h2>
+      <h2>{$t('associations_title')}</h2>
       <p class="section-subtitle">
-        Découvrez les événements et communautés qui célèbrent le Nouvel An Kamit
+        {$t('associations_subtitle')}
       </p>
     </div>
     
     <div class="associations-content">
       <div class="events-grid">
         <div class="event-card card">
-          <h3>Événements Wep Ronpet 2025</h3>
+          <h3>{$t('associations_events_title')}</h3>
           <div class="event-links">
             <a href="https://my.weezevent.com/nouvel-an-kamite" target="_blank" rel="noopener noreferrer" class="event-link">
               <span class="event-icon">🎊</span>
               <div class="event-info">
-                <span class="event-title">Nouvel An Kamite</span>
-                <span class="event-platform">Afrocentricity International & Famille Muntu • GRATUIT - de 16 ans</span>
-                <span class="event-description">Temps sacré de passage vers une nouvelle rotation cosmique, vécu en harmonie avec les lois de l'univers. Renouons avec nos racines spirituelles, honorons nos ancêtres, et réalignons nos vies sur les principes de Maât. Cérémonie et rituels, gastronomie kamite, marché artisanal.</span>
+                <span class="event-title">{$t('associations_event1_title')}</span>
+                <span class="event-platform">{$t('associations_event1_organizer')}</span>
+                <span class="event-description">{$t('associations_event1_desc')}</span>
               </div>
             </a>
             <a href="https://my.weezevent.com/nouvel-an-kamit" target="_blank" rel="noopener noreferrer" class="event-link">
               <span class="event-icon">✨</span>
               <div class="event-info">
-                <span class="event-title">Nouvel An Kamit 6262</span>
-                <span class="event-platform">Mouvement Politique Spirituel MUN • Le Lamentin, Martinique</span>
-                <span class="event-description">Célébration avec la Nouvelle Lune au KAY NZINGHA. Cérémonie, rituels, conférences, dîner kamit, soirée dansante pour la puissance et la confiance du pays. De 15h à minuit.</span>
+                <span class="event-title">{$t('associations_event2_title')}</span>
+                <span class="event-platform">{$t('associations_event2_organizer')}</span>
+                <span class="event-description">{$t('associations_event2_desc')}</span>
               </div>
             </a>
           </div>
         </div>
         
         <div class="community-card card">
-          <h3>Communauté & Ressources</h3>
+          <h3>{$t('associations_community_title')}</h3>
           <div class="community-links">
             <a href="https://14eme-membre.net/site-web/#événements" target="_blank" rel="noopener noreferrer" class="community-link">
               <span class="community-icon">🌍</span>
               <div class="community-info">
-                <span class="community-title">14ème Membre</span>
-                <span class="community-desc">Site web - Événements</span>
+                <span class="community-title">{$t('associations_link1_title')}</span>
+                <span class="community-desc">{$t('associations_link1_desc')}</span>
               </div>
             </a>
             <a href="https://www.facebook.com/people/Mouvement-Politique-Spirituel-MUN" target="_blank" rel="noopener noreferrer" class="community-link">
               <span class="community-icon">📘</span>
               <div class="community-info">
-                <span class="community-title">Mouvement Politique Spirituel MUN</span>
-                <span class="community-desc">Page Facebook officielle</span>
+                <span class="community-title">{$t('associations_link2_title')}</span>
+                <span class="community-desc">{$t('associations_link2_desc')}</span>
               </div>
             </a>
           </div>
@@ -478,7 +479,7 @@ import anime from '../lib/anime.js';
       </div>
       
       <div class="video-section">
-        <h3>Découvrir le Wep Ronpet</h3>
+        <h3>{$t('associations_video_title')}</h3>
         <div class="video-container">
           <iframe
             src="https://www.youtube.com/embed/0_8kWlDTf94"

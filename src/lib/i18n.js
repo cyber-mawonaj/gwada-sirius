@@ -62,6 +62,23 @@ const translations = {
     observatory_title: 'Guide d\'Observation',
     observatory_subtitle: 'Tout pour observer Sirius en Guadeloupe',
     
+    // Associations
+    associations_title: 'Associations qui fêtent le Wep Ronpet',
+    associations_subtitle: 'Découvrez les événements et communautés qui célèbrent le Nouvel An Kamit',
+    associations_events_title: 'Événements Wep Ronpet 2025',
+    associations_community_title: 'Communauté & Ressources',
+    associations_video_title: 'Découvrir le Wep Ronpet',
+    associations_event1_title: 'Nouvel An Kamite',
+    associations_event1_organizer: 'Afrocentricity International & Famille Muntu • GRATUIT - de 16 ans',
+    associations_event1_desc: 'Temps sacré de passage vers une nouvelle rotation cosmique, vécu en harmonie avec les lois de l\'univers. Renouons avec nos racines spirituelles, honorons nos ancêtres, et réalignons nos vies sur les principes de Maât. Cérémonie et rituels, gastronomie kamite, marché artisanal.',
+    associations_event2_title: 'Nouvel An Kamit 6262',
+    associations_event2_organizer: 'Mouvement Politique Spirituel MUN • Le Lamentin, Martinique',
+    associations_event2_desc: 'Célébration avec la Nouvelle Lune au KAY NZINGHA. Cérémonie, rituels, conférences, dîner kamit, soirée dansante pour la puissance et la confiance du pays. De 15h à minuit.',
+    associations_link1_title: '14ème Membre',
+    associations_link1_desc: 'Site web - Événements',
+    associations_link2_title: 'Mouvement Politique Spirituel MUN',
+    associations_link2_desc: 'Page Facebook officielle',
+    
     // Footer
     footer_copyright: 'Projet réalisé avec ❤️ par',
     footer_and: 'et'
@@ -124,6 +141,23 @@ const translations = {
     observatory_title: 'Observation Guide',
     observatory_subtitle: 'Everything to observe Sirius in Guadeloupe',
     
+    // Associations
+    associations_title: 'Associations celebrating Wep Ronpet',
+    associations_subtitle: 'Discover events and communities celebrating the Kamit New Year',
+    associations_events_title: 'Wep Ronpet 2025 Events',
+    associations_community_title: 'Community & Resources',
+    associations_video_title: 'Discover Wep Ronpet',
+    associations_event1_title: 'Kamite New Year',
+    associations_event1_organizer: 'Afrocentricity International & Famille Muntu • FREE under 16',
+    associations_event1_desc: 'Sacred time of passage to a new cosmic rotation, lived in harmony with the laws of the universe. Let us reconnect with our spiritual roots, honor our ancestors, and realign our lives with the principles of Maat. Ceremony and rituals, Kamite gastronomy, artisan market.',
+    associations_event2_title: 'Kamit New Year 6262',
+    associations_event2_organizer: 'Mouvement Politique Spirituel MUN • Le Lamentin, Martinique',
+    associations_event2_desc: 'Celebration with the New Moon at KAY NZINGHA. Ceremony, rituals, conferences, Kamit dinner, dance evening for the power and confidence of the country. From 3pm to midnight.',
+    associations_link1_title: '14th Member',
+    associations_link1_desc: 'Website - Events',
+    associations_link2_title: 'Mouvement Politique Spirituel MUN',
+    associations_link2_desc: 'Official Facebook page',
+    
     // Footer
     footer_copyright: 'Project made with ❤️ by',
     footer_and: 'and'
@@ -185,6 +219,23 @@ const translations = {
     // Observatory
     observatory_title: 'Gid Obsèvasyon',
     observatory_subtitle: 'Tout bagay pou obsève Sirius nan Gwadloup',
+    
+    // Associations
+    associations_title: 'Asosyasyon ki fète Wep Ronpet',
+    associations_subtitle: 'Dekouvri evènman ak kominote ki selebre Nouvel An Kamit la',
+    associations_events_title: 'Evènman Wep Ronpet 2025',
+    associations_community_title: 'Kominote & Resous',
+    associations_video_title: 'Dekouvri Wep Ronpet',
+    associations_event1_title: 'Nouvel An Kamite',
+    associations_event1_organizer: 'Afrocentricity International & Famille Muntu • GRATIS - nan 16 an',
+    associations_event1_desc: 'Tan sakre pasaj nan yon nouvo wotasyon kosmik, yo viv nan amoni ak lwa inivè yo. Ann rekonekte ak rasin espirituyèl nou yo, onore zansèt nou yo, ak realinye lavi nou yo ak prensip Maât yo. Seremoni ak rituyèl, gastromi kamite, mache atizan.',
+    associations_event2_title: 'Nouvel An Kamit 6262',
+    associations_event2_organizer: 'Mouvement Politique Spirituel MUN • Le Lamentin, Matinik',
+    associations_event2_desc: 'Selebrasyon ak Nouvo Lalin nan nan KAY NZINGHA. Seremoni, rituyèl, konferans, dine kamit, sware danse pou pouvwa ak konfyans peyi a. Depi 3è nan midi.',
+    associations_link1_title: '14yèm Manm',
+    associations_link1_desc: 'Sit entènèt - Evènman',
+    associations_link2_title: 'Mouvement Politique Spirituel MUN',
+    associations_link2_desc: 'Paj Facebook ofisyèl',
     
     // Footer
     footer_copyright: 'Pwojè realize avèk ❤️ pa',
