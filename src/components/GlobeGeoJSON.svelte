@@ -1,6 +1,6 @@
 <script>
-  import { onMount } from 'svelte';
-  import anime from '../lib/anime.js';
+import { onMount } from 'svelte';
+import anime from '../lib/anime.js';
   
   let canvas;
   let visible = false;
@@ -58,6 +58,7 @@
       duration: 1000
     }, '-=600');
     
+    
     // Charger les données GeoJSON des continents
     let worldData = null;
     try {
@@ -66,7 +67,6 @@
     } catch (error) {
       console.error('Erreur chargement GeoJSON:', error);
     }
-    
     // Données des lieux avec animation de vague
     const locations = [
       { name: 'La Réunion', lat: -21.1151, lon: 55.5364, date: '27 Juin', color: '#FF6B35', day: 178 },
@@ -151,18 +151,18 @@
       });
     });
     
-    // Projection 3D
+    // Projection 3D (lon/lat to screen coordinates)
     function project(lon, lat, r) {
       const phi = (90 - lat) * Math.PI / 180;
-      const theta = (lon + rotation) * Math.PI / 180;
-      
+      const theta = lon * Math.PI / 180 - rotation;
+
       const x = r * Math.sin(phi) * Math.cos(theta);
       const y = r * Math.cos(phi);
       const z = r * Math.sin(phi) * Math.sin(theta);
-      
+
       return {
-        x: centerX + x * zoom,
-        y: centerY - y * zoom,
+        x: centerX - x,
+        y: centerY - y,
         z: z,
         visible: z > 0
       };
@@ -172,8 +172,11 @@
     function draw() {
       ctx.clearRect(0, 0, width, height);
       
+      // Calculer le rayon actuel avec zoom
+      const currentRadius = radius * zoom;
+      
       // Fond avec dégradé
-      const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius * zoom);
+      const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, currentRadius);
       gradient.addColorStop(0, 'rgba(10, 22, 40, 0.2)');
       gradient.addColorStop(1, 'rgba(10, 22, 40, 0.8)');
       ctx.fillStyle = gradient;
@@ -181,18 +184,18 @@
       
       // Ombre du globe
       ctx.beginPath();
-      ctx.arc(centerX + 10, centerY + 10, radius * zoom, 0, Math.PI * 2);
+      ctx.arc(centerX + 10, centerY + 10, currentRadius, 0, Math.PI * 2);
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
       ctx.fill();
       
       // Globe principal
       ctx.beginPath();
-      ctx.arc(centerX, centerY, radius * zoom, 0, Math.PI * 2);
+      ctx.arc(centerX, centerY, currentRadius, 0, Math.PI * 2);
       const globeGradient = ctx.createRadialGradient(
         centerX - radius * 0.3 * zoom, 
         centerY - radius * 0.3 * zoom, 
         0,
-        centerX, centerY, radius * zoom
+        centerX, centerY, currentRadius
       );
       globeGradient.addColorStop(0, '#1a3a5a');
       globeGradient.addColorStop(0.5, '#0f2847');
@@ -200,21 +203,18 @@
       ctx.fillStyle = globeGradient;
       ctx.fill();
       
-      // Grille de latitude/longitude avec animation
-      ctx.strokeStyle = 'rgba(255, 215, 0, 0.1)';
-      ctx.lineWidth = 1;
+    // Grille de latitude/longitude
+    ctx.strokeStyle = 'rgba(255, 215, 0, 0.1)';
+    ctx.lineWidth = 1;
       
       // Lignes de latitude
       for (let lat = -80; lat <= 80; lat += 20) {
         ctx.beginPath();
         for (let lon = -180; lon <= 180; lon += 5) {
-          const p = project(lon, lat, radius);
+          const p = project(lon, lat, currentRadius);
           if (p.visible) {
-            if (lon === -180) {
-              ctx.moveTo(p.x, p.y);
-            } else {
-              ctx.lineTo(p.x, p.y);
-            }
+            if (lon === -180) ctx.moveTo(p.x, p.y);
+            else ctx.lineTo(p.x, p.y);
           }
         }
         ctx.stroke();
@@ -224,13 +224,10 @@
       for (let lon = -180; lon <= 180; lon += 30) {
         ctx.beginPath();
         for (let lat = -90; lat <= 90; lat += 5) {
-          const p = project(lon, lat, radius);
+          const p = project(lon, lat, currentRadius);
           if (p.visible) {
-            if (lat === -90) {
-              ctx.moveTo(p.x, p.y);
-            } else {
-              ctx.lineTo(p.x, p.y);
-            }
+            if (lat === -90) ctx.moveTo(p.x, p.y);
+            else ctx.lineTo(p.x, p.y);
           }
         }
         ctx.stroke();
@@ -238,10 +235,11 @@
       
       // Dessiner les continents
       if (worldData) {
+        ctx.save();
         ctx.strokeStyle = '#4CAF50';
         ctx.fillStyle = 'rgba(76, 175, 80, 0.3)';
         ctx.lineWidth = 2;
-        
+
         worldData.features.forEach(feature => {
           if (feature.geometry.type === 'Polygon') {
             drawPolygon(feature.geometry.coordinates[0]);
@@ -251,6 +249,7 @@
             });
           }
         });
+        ctx.restore();
       }
       
       // Dessiner les particules de la vague
@@ -258,7 +257,7 @@
         const p = project(
           particle.angle * 180 / Math.PI - 180,
           Math.sin(Date.now() * 0.001 * particle.speed) * 30,
-          particle.radius
+          currentRadius + (particle.radius - radius)
         );
         
         if (p.visible && particle.opacity > 0) {
@@ -271,7 +270,7 @@
       
       // Dessiner les marqueurs avec effet de pulsation
       locations.forEach((location, index) => {
-        const p = project(location.lon, location.lat, radius);
+        const p = project(location.lon, location.lat, currentRadius);
         
         if (p.visible) {
           // Vérifier si la vague est passée
@@ -327,7 +326,7 @@
       
       // Rotation automatique
       if (!isDragging) {
-        rotation -= 0.002;
+        rotation += 0.002;
       }
       
       animationId = requestAnimationFrame(draw);
@@ -336,9 +335,10 @@
     function drawPolygon(coordinates) {
       ctx.beginPath();
       let firstPoint = true;
+      const currentRadius = radius * zoom;
       
       coordinates.forEach(coord => {
-        const p = project(coord[0], coord[1], radius);
+        const p = project(coord[0], coord[1], currentRadius);
         if (p.visible) {
           if (firstPoint) {
             ctx.moveTo(p.x, p.y);

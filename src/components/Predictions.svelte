@@ -338,7 +338,6 @@
     background: rgba(255, 255, 255, 0.05);
     border-radius: 20px;
     padding: 2rem;
-    opacity: 0;
   }
   
   .results-container h3 {
@@ -360,7 +359,6 @@
     border-radius: 15px;
     padding: 1.5rem;
     text-align: center;
-    opacity: 0;
   }
   
   .result-item.highlight {
