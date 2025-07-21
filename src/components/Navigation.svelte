@@ -58,7 +58,8 @@
     { id: 'predictions', label: 'nav_predictions', icon: '📅' },
     { id: 'science', label: 'nav_science', icon: '🔭' },
     { id: 'culture', label: 'nav_culture', icon: '🌍' },
-    { id: 'observatory', label: 'nav_observatory', icon: '👁️' }
+    { id: 'observatory', label: 'nav_observatory', icon: '👁️' },
+    { id: 'associations', label: 'nav_associations', icon: '🤝' }
   ];
   
   const scrollToSection = (id) => {

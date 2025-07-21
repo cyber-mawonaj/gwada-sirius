@@ -423,6 +423,77 @@ import anime from '../lib/anime.js';
   </div>
 </section>
 
+<section id="associations" class="associations-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Associations qui fêtent le Wep Ronpet</h2>
+      <p class="section-subtitle">
+        Découvrez les événements et communautés qui célèbrent le Nouvel An Kamit
+      </p>
+    </div>
+    
+    <div class="associations-content">
+      <div class="events-grid">
+        <div class="event-card card">
+          <h3>Événements Wep Ronpet 2025</h3>
+          <div class="event-links">
+            <a href="https://my.weezevent.com/nouvel-an-kamite" target="_blank" rel="noopener noreferrer" class="event-link">
+              <span class="event-icon">🎊</span>
+              <div class="event-info">
+                <span class="event-title">Nouvel An Kamite</span>
+                <span class="event-platform">Afrocentricity International & Famille Muntu • GRATUIT - de 16 ans</span>
+                <span class="event-description">Temps sacré de passage vers une nouvelle rotation cosmique, vécu en harmonie avec les lois de l'univers. Renouons avec nos racines spirituelles, honorons nos ancêtres, et réalignons nos vies sur les principes de Maât. Cérémonie et rituels, gastronomie kamite, marché artisanal.</span>
+              </div>
+            </a>
+            <a href="https://my.weezevent.com/nouvel-an-kamit" target="_blank" rel="noopener noreferrer" class="event-link">
+              <span class="event-icon">✨</span>
+              <div class="event-info">
+                <span class="event-title">Nouvel An Kamit 6262</span>
+                <span class="event-platform">Mouvement Politique Spirituel MUN • Le Lamentin, Martinique</span>
+                <span class="event-description">Célébration avec la Nouvelle Lune au KAY NZINGHA. Cérémonie, rituels, conférences, dîner kamit, soirée dansante pour la puissance et la confiance du pays. De 15h à minuit.</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        
+        <div class="community-card card">
+          <h3>Communauté & Ressources</h3>
+          <div class="community-links">
+            <a href="https://14eme-membre.net/site-web/#événements" target="_blank" rel="noopener noreferrer" class="community-link">
+              <span class="community-icon">🌍</span>
+              <div class="community-info">
+                <span class="community-title">14ème Membre</span>
+                <span class="community-desc">Site web - Événements</span>
+              </div>
+            </a>
+            <a href="https://www.facebook.com/people/Mouvement-Politique-Spirituel-MUN" target="_blank" rel="noopener noreferrer" class="community-link">
+              <span class="community-icon">📘</span>
+              <div class="community-info">
+                <span class="community-title">Mouvement Politique Spirituel MUN</span>
+                <span class="community-desc">Page Facebook officielle</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="video-section">
+        <h3>Découvrir le Wep Ronpet</h3>
+        <div class="video-container">
+          <iframe
+            src="https://www.youtube.com/embed/0_8kWlDTf94"
+            title="Vidéo sur le Wep Ronpet"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            class="youtube-video"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <style>
   .globe-section {
     padding: var(--spacing-xl) 0;
@@ -534,6 +605,135 @@ import anime from '../lib/anime.js';
     
     .globe-canvas {
       height: 400px;
+    }
+  }
+
+  /* Styles pour la section associations */
+  .associations-section {
+    padding: var(--spacing-xl) 0;
+    background: linear-gradient(135deg, #0f1419 0%, #1a2332 100%);
+  }
+
+  .associations-content {
+    margin-top: var(--spacing-lg);
+  }
+
+  .events-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .event-card, .community-card {
+    background: rgba(255, 215, 0, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 16px;
+    padding: var(--spacing-lg);
+    transition: all 0.3s ease;
+  }
+
+  .event-card:hover, .community-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-primary);
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+  }
+
+  .event-card h3, .community-card h3 {
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-md);
+    font-size: 1.25rem;
+  }
+
+  .event-links, .community-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .event-link, .community-link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--color-light);
+    transition: all 0.3s ease;
+  }
+
+  .event-link:hover, .community-link:hover {
+    background: rgba(255, 215, 0, 0.2);
+    transform: translateX(5px);
+  }
+
+  .event-icon, .community-icon {
+    font-size: 1.5rem;
+    min-width: 32px;
+  }
+
+  .event-info, .community-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .event-title, .community-title {
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-bottom: 2px;
+  }
+
+  .event-platform, .community-desc {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+  }
+
+  .event-description {
+    font-size: 0.85rem;
+    color: var(--color-light);
+    margin-top: 4px;
+    line-height: 1.4;
+    opacity: 0.9;
+  }
+
+  .video-section {
+    text-align: center;
+  }
+
+  .video-section h3 {
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.5rem;
+  }
+
+  .video-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    aspect-ratio: 16/9;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .youtube-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  @media (max-width: 768px) {
+    .events-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .video-container {
+      max-width: 100%;
     }
   }
 </style>

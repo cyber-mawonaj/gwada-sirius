@@ -13,6 +13,7 @@ const translations = {
     nav_science: 'Science',
     nav_culture: 'Culture',
     nav_observatory: 'Observatoire',
+    nav_associations: 'Associations',
     
     // Hero
     hero_title1: 'Sirius',
@@ -74,6 +75,7 @@ const translations = {
     nav_science: 'Science',
     nav_culture: 'Culture',
     nav_observatory: 'Observatory',
+    nav_associations: 'Associations',
     
     // Hero
     hero_title1: 'Sirius',
@@ -135,6 +137,7 @@ const translations = {
     nav_science: 'Syans',
     nav_culture: 'Kilti',
     nav_observatory: 'Obsèvatwa',
+    nav_associations: 'Asosyasyon',
     
     // Hero
     hero_title1: 'Sirius',
