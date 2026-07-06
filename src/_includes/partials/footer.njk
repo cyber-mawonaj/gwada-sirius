@@ -1,0 +1,49 @@
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-section">
+      <h2>Sirius Gwada</h2>
+      <p>{{ "footer_tagline" | t(locale) }}</p>
+    </div>
+
+    <div class="footer-section">
+      <h3>{{ "footer_links_title" | t(locale) }}</h3>
+      <ul>
+        {% for item in nav %}
+        <li><a href="{{ item.path | localeHref(locale) }}">{{ item.key | t(locale) }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h3>{{ "footer_resources_title" | t(locale) }}</h3>
+      <ul>
+        <li><a href="https://stellarium.org" target="_blank" rel="noopener">{{ "footer_resources_stellarium" | t(locale) }}</a></li>
+        <li><a href="{{ '/observer/' | localeHref(locale) }}">{{ "footer_resources_guide" | t(locale) }}</a></li>
+        <li><a href="{{ '/sirius-science/' | localeHref(locale) }}">{{ "footer_resources_references" | t(locale) }}</a></li>
+        <li><a href="mailto:contact@o-k-i.net">{{ "footer_resources_contact" | t(locale) }}</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-section">
+      <h3>{{ "footer_next_title" | t(locale) }}</h3>
+      <div class="countdown">
+        <div class="countdown-item">
+          <span class="countdown-value">{{ nextRising.date | formatDate(locale, { day: "numeric", month: "long" }) }}</span>
+          <span class="countdown-label">{{ nextRising.time }} · {{ nextRising.year }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p class="pattern-strip kente" aria-hidden="true"></p>
+    <p>&copy; {{ currentYear }} {{ "footer_rights" | t(locale) }}</p>
+    <p class="footer-credits">
+      {{ "footer_copyright_prefix" | t(locale) }}
+      <a href="https://github.com/cyber-mawonaj" target="_blank" rel="noopener">cyber-mawonaj</a>
+      {{ "footer_and" | t(locale) }}
+      <a href="https://o-k-i.net" target="_blank" rel="noopener">OKI</a>
+    </p>
+    <p class="footer-quote">{{ "footer_quote" | t(locale) }}</p>
+  </div>
+</footer>

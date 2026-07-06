@@ -2,116 +2,41 @@
 
 ## 📋 Vue d'ensemble
 
-J'ai créé une application web one-page avec Svelte qui combine les 3 pages HTML que vous aviez et enrichit le contenu avec les informations du PDF. L'application est moderne, mobile-first, avec un design panafricain/caribéen.
+Refonte complète (v2) : passage d'une SPA Vite+Svelte 4 à un site **11ty** statique avec **Svelte 5 en îlots**, un design system CSS natif (oklch, `@layer`, container queries) et une i18n compilée (Paraglide/inlang). Conforme à la doctrine UI/UX OKI : nav à 5 entrées, fonctionne sans JavaScript pour tout le contenu éditorial, budget JS minimal.
 
-## 🏗️ Structure du projet
+## 🏗️ Architecture
 
-```
-/home/sucupira/dev/Gwada-Sirius/
-├── src/
-│   ├── App.svelte          # Composant principal
-│   ├── app.css            # Styles globaux avec patterns africains
-│   ├── main.js            # Point d'entrée
-│   ├── components/        # Composants Svelte
-│   │   ├── Navigation.svelte    # Menu responsive
-│   │   ├── Hero.svelte         # Section héro avec animation d'étoiles
-│   │   ├── About.svelte        # Introduction à Sirius
-│   │   ├── Predictions.svelte  # Calculateur interactif
-│   │   ├── Science.svelte      # Explication scientifique
-│   │   ├── Culture.svelte      # Héritage culturel
-│   │   ├── Observatory.svelte  # Guide d'observation
-│   │   ├── Globe.svelte        # Visualisation globe (Canvas 2D)
-│   │   └── Footer.svelte       # Pied de page
-│   └── data/
-│       └── predictions.js      # Données des prédictions
-├── package.json
-├── vite.config.js
-├── index.html
-├── README.md
-├── .gitignore
-└── start.sh               # Script de démarrage rapide
-```
+- **Contenu** : pages Nunjucks (`src/*.njk`), chacune paginée sur les 3 langues (`fr`/`en`/`ht`) via `pagination.data: locales`.
+- **Données** : `src/_data/sites.js` (7 sites d'observation, dates interpolées Jean Meeus / Jeffrey L. Hunt), `src/_data/nav.js`, `src/_data/nextRising.js` (calculé au build).
+- **i18n** : catalogues `messages/{fr,en,ht}.json`, compilés par `@inlang/paraglide-js` en `src/paraglide/` avant chaque build (`npm run messages`). `ht` retombe automatiquement sur `fr` pour les clés non traduites (contenu long, cf. portée d'origine).
+- **Îlots Svelte 5** (3 seulement, le reste est HTML/CSS pur) :
+  - `PredictionsCalculator` — hydratation immédiate, améliore le tableau statique des 7 sites
+  - `ObservationMap` — carte canvas schématique, hydratation différée (IntersectionObserver)
+  - `SiriusGlobe` — vague planétaire du lever héliaque (13 villes), hydratation différée
+- **Onglets** (Science, Dogon) : 100 % CSS (`input[type=radio]` + `label`), zéro JS.
+- **Build** : `@11ty/eleventy-plugin-vite` fait passer la sortie 11ty par Vite (bundling CSS/JS, compilation Svelte). Un plugin maison recopie les assets passthrough après le build Vite (voir commentaire dans `eleventy.config.js` — `emptyOutDir` de Vite les efface sinon).
 
-## 🎨 Design et fonctionnalités
+## ⚠️ Points d'attention connus
 
-### Palette de couleurs panafricaine :
-- **Or (#FFD700)** : Couleur principale, représente Sirius et le soleil
-- **Rouge profond (#DC143C)** : Accent
-- **Vert forêt (#228B22)** : Nature
-- **Bleu nuit (#1a1a2e)** : Fond, ciel nocturne
-
-### Patterns africains intégrés :
-- **Kente** : Motif géométrique en diagonale
-- **Bogolan** : Cercles et points
-- **Adinkra** : Motifs symboliques
-
-### Sections principales :
-1. **Hero** : Animation d'étoiles interactive avec effet parallaxe
-2. **About** : Introduction avec cartes d'information
-3. **Predictions** : Calculateur interactif avec sélecteurs
-4. **Science** : Tabs pour explorer la mécanique céleste
-5. **Culture** : Timeline et cartes culturelles
-6. **Observatory** : Guide pratique étape par étape
-7. **Globe** : Visualisation 2D animée (plus léger que Three.js)
-
-## 🚀 Pour démarrer
-
-```bash
-cd /home/sucupira/dev/Gwada-Sirius
-./start.sh
-```
-
-Ou manuellement :
-```bash
-npm install
-npm run dev
-```
-
-## 📱 Responsive Design
-
-- Mobile-first approach
-- Menu hamburger pour mobile
-- Grilles flexibles
-- Tailles de police adaptatives avec clamp()
-
-## ⚡ Performance
-
-- Svelte compile en vanilla JS (pas de runtime)
-- Canvas 2D au lieu de Three.js pour le globe
-- Lazy loading des animations avec IntersectionObserver
-- CSS optimisé avec variables custom properties
+1. **`<link>` et `vite-ignore`** : Vite traite tout `<link href>` comme une référence d'asset à résoudre, y compris `rel="alternate"`/`rel="icon"`/`rel="preload"`. Un `href="/"` ou `href="/en/"` (URL de répertoire) fait planter le build (`EISDIR`, cf. issue amont). Toujours ajouter `vite-ignore` sur ces `<link>` de métadonnées dans `layouts/base.njk`.
+2. **Alias `/src`** : `eleventy-plugin-vite` fait tourner Vite avec pour racine une copie du dossier de **sortie** (`_site`), pas la racine du projet. Toute référence absolue à un fichier source (`/src/styles/app.css`, `/src/islands/.../mount.js`) nécessite l'alias `resolve.alias["/src"]` défini dans `eleventy.config.js`.
+3. **Dates ISO sans heure** : `new Date("2026-07-22")` est interprété en UTC ; formaté en heure locale Guadeloupe (UTC-4), ça peut reculer d'un jour. Toujours parser les composants (`year, month, day`) et construire la date en local — voir le filtre `formatDate` et `PredictionsCalculator.svelte`.
+4. **Slinkity est abandonné** (son créateur travaille sur Astro) : ne pas l'utiliser pour l'intégration 11ty+Svelte, `eleventy-plugin-vite` (officiel) est la voie robuste.
 
 ## 🔄 Améliorations possibles
 
-1. **Ajouter un compte à rebours dynamique** jusqu'au 22 juillet
-2. **Intégrer une API météo** pour les prévisions
-3. **Ajouter des sons ambiants** africains/caribéens
-4. **Mode sombre/clair** automatique selon l'heure
-5. **PWA** pour installation mobile
-6. **Partage social** avec meta tags optimisés
-7. **Multilingue** (Français, Créole, Anglais)
-8. **Animations GSAP** pour plus de fluidité
+- Traduire le contenu long en Kreyòl (actuellement chrome/labels uniquement, contenu de fond en français)
+- Vraies données GeoJSON pour `ObservationMap` (actuellement une carte schématique par position lat/lon normalisée, pas un tracé de côte réel)
+- Service worker pour un usage hors-ligne (mentionné dans la doctrine, pas encore implémenté)
+- Mettre à jour chaque année les informations d'événements associatifs (`associations.njk`, données à vérifier auprès des organisateurs)
 
 ## 📦 Build pour production
 
 ```bash
 npm run build
-# Les fichiers seront dans dist/
+# Sortie dans _site/
 ```
 
 ## 🌐 Déploiement
 
-Peut être déployé facilement sur :
-- Netlify (drag & drop du dossier dist)
-- Vercel
-- GitHub Pages
-- Surge.sh
-
-## 💡 Points techniques importants
-
-1. **Données astronomiques** : Toutes les prédictions sont stockées dans `src/data/predictions.js`
-2. **Animations** : Utilisation de CSS animations et requestAnimationFrame
-3. **État** : Gestion simple avec les stores Svelte (pas de store global pour l'instant)
-4. **SEO** : Ajouter les meta tags appropriés dans index.html
-
-Le projet est maintenant prêt et fonctionnel ! Vous pouvez le personnaliser selon vos besoins.
+GitHub Pages via `.github/workflows/deploy.yml` (upload de `_site/`), déclenché sur push vers `main`.

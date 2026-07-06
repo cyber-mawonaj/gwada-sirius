@@ -1,0 +1,74 @@
+:root {
+  color-scheme: light dark;
+
+  /* === Couleur — oklch, contraste d'abord (méthode modus-vivendi) ===
+     Deux thèmes conceptuellement liés au sujet : Aube (clair) / Nuit (sombre). */
+  --ink: light-dark(oklch(23% 0.03 265), oklch(95% 0.015 85));
+  --ink-soft: light-dark(oklch(38% 0.03 265), oklch(80% 0.02 85));
+  --surface: light-dark(oklch(96% 0.015 85), oklch(16% 0.03 265));
+  --surface-raised: light-dark(oklch(99% 0.008 85), oklch(21% 0.03 265));
+  --surface-sunk: light-dark(oklch(91% 0.02 85), oklch(12% 0.025 265));
+  --border: light-dark(oklch(85% 0.02 85), oklch(32% 0.035 265));
+
+  /* Or de Sirius : variante lisible (texte/liens) + variante décorative (glows) */
+  --gold: light-dark(oklch(45% 0.15 75), oklch(82% 0.15 87));
+  --gold-surface: oklch(80% 0.16 85);
+  --kente-red: light-dark(oklch(46% 0.18 25), oklch(70% 0.19 25));
+  --bogolan-green: light-dark(oklch(40% 0.09 145), oklch(68% 0.12 145));
+  --caribbean-teal: light-dark(oklch(43% 0.09 195), oklch(74% 0.11 195));
+
+  --focus-ring: var(--caribbean-teal);
+
+  /* === Typographie === */
+  --font-display: "Fraunces Variable", "Fraunces", ui-serif, Georgia, serif;
+  --font-body: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+
+  --text-0: clamp(0.8rem, 0.78rem + 0.1vw, 0.875rem);
+  --text-1: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-2: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+  --text-3: clamp(1.375rem, 1.2rem + 0.75vw, 1.75rem);
+  --text-4: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+  --text-5: clamp(2.25rem, 1.7rem + 2.5vw, 3.5rem);
+  --text-6: clamp(2.75rem, 1.8rem + 4.5vw, 5.5rem);
+
+  --leading-tight: 1.15;
+  --leading-normal: 1.6;
+  --measure: 65ch;
+
+  /* === Espacement (échelle modulaire) === */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
+  --space-6: 4rem;
+  --space-7: 6rem;
+
+  /* === Formes, ombres, mouvement === */
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 3px light-dark(oklch(23% 0.03 265 / 12%), oklch(0% 0 0 / 30%));
+  --shadow-md: 0 8px 30px light-dark(oklch(23% 0.03 265 / 12%), oklch(0% 0 0 / 45%));
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 200ms;
+  --duration-base: 400ms;
+  --duration-slow: 700ms;
+
+  /* Fitts : cible tactile minimale */
+  --tap-target: 48px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

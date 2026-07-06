@@ -1,71 +1,61 @@
-# Sirius en Guadeloupe - Gwada-Sirius
+# Sirius en Guadeloupe — Gwada-Sirius
 
-Un projet web célébrant le lever héliaque de Sirius en Guadeloupe, fusionnant astronomie, culture africaine et héritage caribéen.
+Un site célébrant le lever héliaque de Sirius en Guadeloupe (Wep Ronpet), à la croisée de l'astronomie, de l'héritage égyptien et dogon, et de la culture caribéenne.
 
 ## 🌟 À propos
 
-Cette application web interactive permet de :
-- Calculer les dates précises du lever héliaque de Sirius pour différents lieux en Guadeloupe
-- Explorer l'héritage culturel de Sirius à travers les civilisations (Égypte ancienne, Dogons, Caraïbes)
-- Comprendre la science astronomique derrière ce phénomène
-- Découvrir les meilleurs sites d'observation en Guadeloupe
+Ce site permet de :
+- Calculer la date précise du lever héliaque pour 7 sites d'observation en Guadeloupe
+- Explorer l'héritage culturel de Sirius (Égypte ancienne, Dogon du Mali, Caraïbes)
+- Comprendre la science du phénomène (Arcus Visionis, méthode de calcul)
+- Préparer une observation (guide pratique, équipement, carte des sites)
+- Découvrir les associations qui célèbrent le Wep Ronpet
 
-## 🚀 Technologies utilisées
+## 🚀 Stack technique
 
-- **Svelte** - Framework JavaScript réactif
-- **Canvas 2D** - Pour les animations et visualisations
-- **GeoJSON** - Pour les cartes interactives
-- **i18n** - Support multilingue (Français, English, Kreyòl Ayisyen)
+- **[11ty (Eleventy)](https://www.11ty.dev/)** — génération du site statique, contenu et navigation en HTML/CSS, fonctionnel sans JavaScript
+- **[Svelte 5](https://svelte.dev/)** en îlots — hydratation ciblée pour les 3 seuls widgets interactifs (calculateur de prédictions, carte d'observation, globe de la vague planétaire), via `@11ty/eleventy-plugin-vite`
+- **[Paraglide (inlang)](https://paraglidejs.com/)** — i18n compilée, FR (défaut) / EN / Kreyòl Ayisyen, routée par URL (`/`, `/en/`, `/ht/`)
+- **CSS natif** — tokens `oklch()`, cascade `@layer`, container queries, aucun framework CSS ni préprocesseur
+- Polices auto-hébergées (Fraunces, Atkinson Hyperlegible), zéro dépendance à Google Fonts
+
+Conforme à la doctrine UI/UX OKI (voir document de référence interne) : navigation à 5 entrées, cibles tactiles ≥ 48 px, contraste AA/AAA, `prefers-reduced-motion` respecté, budget JS minimal.
 
 ## 📦 Installation
 
 ```bash
-# Cloner le repository
-git clone https://github.com/[votre-username]/gwada-sirius.git
-
-# Entrer dans le dossier
-cd gwada-sirius
-
-# Installer les dépendances
 npm install
-
-# Lancer le serveur de développement
-npm run dev
+npm run dev      # serveur de développement sur http://localhost:8080
+npm run build    # build de production dans _site/
+npm run preview  # prévisualiser le build de production
 ```
 
-## 🌍 Fonctionnalités
+## 🗂️ Structure
 
-- **Calculateur de prédictions** : Dates précises pour 7 sites d'observation
-- **Globe interactif** : Visualisation de la trajectoire de Sirius
-- **Carte des sites** : Localisation des meilleurs points d'observation
-- **Multilingue** : Interface en français, anglais et créole haïtien
-- **Responsive** : Optimisé pour mobile et desktop
-- **Animations** : Ciel étoilé animé et patterns africains
-
-## 🎨 Design
-
-Le design s'inspire des motifs africains (Kente, Adinkra, Bogolan) avec une palette de couleurs symbolique :
-- Or (#FFD700) - Sirius et la lumière divine
-- Rouge (#FF6B35) - Force et énergie vitale
-- Vert (#4CAF50) - Nature et renouveau
-- Bleu nuit (#0A1628) - Ciel nocturne
+```
+src/
+├── _data/            # données globales (sites d'observation, navigation)
+├── _includes/         # layout de base, partiels (nav, footer)
+├── styles/            # design system CSS (tokens, reset, base, layouts, composants)
+├── islands/           # composants Svelte 5 hydratés côté client (prédictions, carte, globe)
+├── paraglide/         # messages i18n compilés (généré, ignoré par git)
+├── index.njk          # accueil
+├── sirius-science.njk # astronomie + méthode de calcul
+├── culture-savoirs.njk# héritage culturel + savoir dogon
+├── observer.njk        # calculateur, carte, guide d'observation
+└── associations.njk    # associations qui fêtent le Wep Ronpet
+messages/               # catalogues de traduction (fr/en/ht), source pour Paraglide
+project.inlang/         # configuration du projet i18n
+```
 
 ## 👥 Crédits
 
-Projet réalisé avec ❤️ par :
-- [cyber-mawonaj](https://github.com/cyber-mawonaj)
-- [OKI](https://o-k-i.net)
+Projet réalisé avec ❤️ par [cyber-mawonaj](https://github.com/cyber-mawonaj) et [OKI](https://o-k-i.net).
 
 ## 📜 Licence
 
-Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
-## 🙏 Remerciements
-
-- Les anciens Égyptiens pour leur sagesse astronomique
-- Les Dogons du Mali pour avoir préservé ces connaissances
-- La communauté guadeloupéenne pour perpétuer ces traditions
+MIT — voir [LICENSE](LICENSE).
 
 ---
 
-*"Les étoiles sont les ancêtres qui veillent sur nous" - Proverbe africain*
+*"Les étoiles sont les ancêtres qui veillent sur nous" — proverbe africain*

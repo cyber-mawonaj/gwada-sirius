@@ -1,0 +1,79 @@
+---
+pagination:
+  data: locales
+  size: 1
+  alias: locale
+permalink: "{% if locale == baseLocale %}/associations/index.html{% else %}/{{ locale }}/associations/index.html{% endif %}"
+layout: layouts/base.njk
+pageKey: associations
+slug: "associations/"
+eleventyComputed:
+  pageTitle: "{{ 'associations_title' | t(locale) }}"
+---
+<section class="section">
+  <div class="container">
+    <div class="section-header center">
+      <p class="section-eyebrow">Wep Ronpet</p>
+      <h1>{{ "associations_title" | t(locale) }}</h1>
+      <p class="pattern-strip bogolan" aria-hidden="true" style="margin-inline:auto"></p>
+      <p class="section-subtitle">{{ "associations_subtitle" | t(locale) }}</p>
+    </div>
+
+    <div class="grid-auto">
+      <div class="card">
+        <h2>{{ "associations_events_title" | t(locale) }}</h2>
+        <div class="stack" style="--stack-space: 0">
+          <a class="event-link" href="https://my.weezevent.com/nouvel-an-kamite" target="_blank" rel="noopener noreferrer">
+            <span class="event-icon" aria-hidden="true">🎊</span>
+            <span class="event-info">
+              <span class="event-title">{{ "associations_event1_title" | t(locale) }}</span>
+              <span class="event-platform">{{ "associations_event1_organizer" | t(locale) }}</span>
+              <span>{{ "associations_event1_desc" | t(locale) }}</span>
+            </span>
+          </a>
+          <a class="event-link" href="https://my.weezevent.com/nouvel-an-kamit" target="_blank" rel="noopener noreferrer">
+            <span class="event-icon" aria-hidden="true">✨</span>
+            <span class="event-info">
+              <span class="event-title">{{ "associations_event2_title" | t(locale) }}</span>
+              <span class="event-platform">{{ "associations_event2_organizer" | t(locale) }}</span>
+              <span>{{ "associations_event2_desc" | t(locale) }}</span>
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>{{ "associations_community_title" | t(locale) }}</h2>
+        <div class="stack" style="--stack-space: 0">
+          <a class="community-link" href="https://14eme-membre.net/site-web/#événements" target="_blank" rel="noopener noreferrer">
+            <span class="community-icon" aria-hidden="true">🌍</span>
+            <span class="community-info">
+              <span class="community-title">{{ "associations_link1_title" | t(locale) }}</span>
+              <span>{{ "associations_link1_desc" | t(locale) }}</span>
+            </span>
+          </a>
+          <a class="community-link" href="https://www.facebook.com/people/Mouvement-Politique-Spirituel-MUN" target="_blank" rel="noopener noreferrer">
+            <span class="community-icon" aria-hidden="true">📘</span>
+            <span class="community-info">
+              <span class="community-title">{{ "associations_link2_title" | t(locale) }}</span>
+              <span>{{ "associations_link2_desc" | t(locale) }}</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="center" style="margin-top: var(--space-7)">{{ "associations_video_title" | t(locale) }}</h2>
+    <div class="video-frame card" style="margin-top: var(--space-4)">
+      <iframe
+        src="https://www.youtube.com/embed/0_8kWlDTf94"
+        title="{{ 'associations_video_title' | t(locale) }}"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+    </div>
+
+    <p class="associations-note center">{{ "associations_note" | t(locale) }}</p>
+  </div>
+</section>

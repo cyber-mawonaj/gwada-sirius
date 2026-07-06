@@ -1,0 +1,80 @@
+.diagram-orbit {
+  position: relative;
+  height: 16rem;
+  margin-block: var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.diagram-orbit .ring {
+  position: absolute;
+  width: 12rem;
+  height: 12rem;
+  border: 2px dashed var(--border);
+  border-radius: 50%;
+}
+
+.diagram-orbit .body {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-4);
+}
+
+.diagram-orbit .body span {
+  font-size: var(--text-0);
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.diagram-orbit .sun { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.diagram-orbit .earth { top: 15%; left: 15%; }
+.diagram-orbit .sirius { top: 15%; right: 15%; }
+
+.diagram-arcus {
+  position: relative;
+  height: 12rem;
+  margin-block: var(--space-4);
+  border-bottom: 2px solid var(--gold);
+}
+
+.diagram-arcus .horizon-label {
+  position: absolute;
+  bottom: -1.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.diagram-arcus .angle {
+  position: absolute;
+  bottom: 0;
+  left: 30%;
+  width: 4rem;
+  height: 4rem;
+  border: 2px solid var(--caribbean-teal);
+  border-bottom: none;
+  border-left: none;
+  border-radius: 0 100% 0 0;
+}
+
+.diagram-arcus .angle-label {
+  position: absolute;
+  bottom: 4.2rem;
+  left: calc(30% + 4.2rem);
+  color: var(--caribbean-teal);
+  font-weight: 700;
+}
+
+.diagram-arcus .sirius-mark,
+.diagram-arcus .sun-mark {
+  position: absolute;
+  bottom: var(--space-2);
+}
+
+.diagram-arcus .sirius-mark { left: 25%; }
+.diagram-arcus .sun-mark { right: 25%; bottom: -0.6rem; }

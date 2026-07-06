@@ -1,0 +1,80 @@
+.site-footer {
+  background: var(--surface-sunk);
+  border-top: 1px solid var(--border);
+  padding-block: var(--space-6) var(--space-4);
+  margin-top: var(--space-7);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.footer-section h2 {
+  font-size: var(--text-2);
+  margin-bottom: var(--space-2);
+}
+
+.footer-section h3 {
+  font-size: var(--text-1);
+  color: var(--gold);
+  margin-bottom: var(--space-2);
+}
+
+.footer-section ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.footer-section a {
+  text-decoration: none;
+  color: var(--ink-soft);
+}
+
+.footer-section a:hover {
+  color: var(--gold);
+}
+
+.countdown-item {
+  display: inline-flex;
+  flex-direction: column;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.countdown-value {
+  font-family: var(--font-display);
+  font-size: var(--text-2);
+  color: var(--gold);
+}
+
+.countdown-label {
+  color: var(--ink-soft);
+  font-size: var(--text-0);
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-4);
+}
+
+.footer-bottom .pattern-strip {
+  margin-inline: auto;
+}
+
+.footer-credits a {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.footer-quote {
+  margin-top: var(--space-2);
+  font-style: italic;
+  color: var(--ink-soft);
+}

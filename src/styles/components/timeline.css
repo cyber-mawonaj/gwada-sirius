@@ -1,0 +1,68 @@
+/* Timeline verticale (Culture, Dogon, héritage diaspora) */
+.timeline-v {
+  position: relative;
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-left: var(--space-5);
+}
+
+.timeline-v::before {
+  content: "";
+  position: absolute;
+  left: 0.4rem;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  width: 2px;
+  background: var(--gold-surface);
+  opacity: 0.4;
+}
+
+.timeline-v-item {
+  position: relative;
+  padding-bottom: var(--space-4);
+}
+
+.timeline-v-item::before {
+  content: "";
+  position: absolute;
+  left: -1.65rem;
+  top: 0.3rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: var(--gold-surface);
+}
+
+.timeline-v-date {
+  font-weight: 700;
+  color: var(--gold);
+}
+
+/* Timeline horizontale à 4 étapes (Observer) */
+.timeline-h {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+  counter-reset: step;
+}
+
+.timeline-h-step {
+  text-align: center;
+  padding-top: var(--space-3);
+  border-top: 4px solid var(--gold-surface);
+}
+
+.timeline-h-icon {
+  font-size: var(--text-4);
+}
+
+.timeline-h-time {
+  font-weight: 700;
+  color: var(--gold);
+}
+
+@media (max-width: 47.99em) {
+  .timeline-h {
+    grid-template-columns: 1fr;
+  }
+}

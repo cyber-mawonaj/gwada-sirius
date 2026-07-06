@@ -2,6 +2,9 @@
 dist/
 build/
 .svelte-kit/
+_site/
+.11ty-vite/
+src/paraglide/
 
 # Dépendances
 node_modules/
@@ -26,6 +29,10 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# Claude Code (local uniquement)
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
 
 # Temporaires
 *.tmp

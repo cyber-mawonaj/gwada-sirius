@@ -1,0 +1,33 @@
+/* Motifs panafricains — utilisés en accents ponctuels (un par section, effet
+   Von Restorff), jamais en texture de fond généralisée. */
+
+.pattern-strip {
+  display: block;
+  height: 0.5rem;
+  width: 100%;
+  max-width: 8rem;
+  border-radius: var(--radius-pill);
+  margin-block: var(--space-3);
+}
+
+.pattern-strip.kente {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--gold-surface) 0 10px,
+    var(--kente-red) 10px 20px
+  );
+}
+
+.pattern-strip.bogolan {
+  background-image: radial-gradient(circle, var(--gold-surface) 30%, transparent 31%);
+  background-size: 12px 12px;
+  background-color: var(--bogolan-green);
+}
+
+.pattern-strip.adinkra {
+  background: repeating-conic-gradient(
+    var(--gold-surface) 0deg 90deg,
+    var(--caribbean-teal) 90deg 180deg
+  );
+  background-size: 14px 14px;
+}

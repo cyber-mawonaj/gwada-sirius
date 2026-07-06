@@ -1,0 +1,6 @@
+/* Thème OKI — identité par défaut de Gwada-Sirius.
+   Un fichier de thème ne redéfinit que des tokens (jamais de sélecteurs de
+   composants), pour rester échangeable avec d'autres identités visuelles OKI. */
+[data-theme="oki"] {
+  --brand-name: "Sirius Gwada";
+}
