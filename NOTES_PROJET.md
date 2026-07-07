@@ -11,8 +11,8 @@ Refonte complète (v2) : passage d'une SPA Vite+Svelte 4 à un site **11ty** sta
 - **i18n** : catalogues `messages/{fr,en,ht}.json`, compilés par `@inlang/paraglide-js` en `src/paraglide/` avant chaque build (`npm run messages`). `ht` retombe automatiquement sur `fr` pour les clés non traduites (contenu long, cf. portée d'origine).
 - **Îlots Svelte 5** (3 seulement, le reste est HTML/CSS pur) :
   - `PredictionsCalculator` — hydratation immédiate, améliore le tableau statique des 7 sites
-  - `ObservationMap` — carte canvas schématique, hydratation différée (IntersectionObserver)
-  - `SiriusGlobe` — vague planétaire du lever héliaque (13 villes), hydratation différée
+  - `ObservationMap` — vraie carte Leaflet + fond OSM, marqueurs/popups pour les 7 sites, hydratation différée (IntersectionObserver). Leaflet est utilisé directement (pas de wrapper Svelte type Sveaflet/svelte-openlayers — évalués mais écartés : le premier cible une prérelease de Svelte 5 et vient d'être publié, le second embarque OpenLayers, bien plus lourd que nécessaire pour 7 marqueurs)
+  - `SiriusGlobe` — vague planétaire du lever héliaque (13 villes), carte canvas schématique (continents simplifiés), hydratation différée
 - **Onglets** (Science, Dogon) : 100 % CSS (`input[type=radio]` + `label`), zéro JS.
 - **Build** : `@11ty/eleventy-plugin-vite` fait passer la sortie 11ty par Vite (bundling CSS/JS, compilation Svelte). Un plugin maison recopie les assets passthrough après le build Vite (voir commentaire dans `eleventy.config.js` — `emptyOutDir` de Vite les efface sinon).
 
@@ -26,9 +26,8 @@ Refonte complète (v2) : passage d'une SPA Vite+Svelte 4 à un site **11ty** sta
 ## 🔄 Améliorations possibles
 
 - Traduire le contenu long en Kreyòl (actuellement chrome/labels uniquement, contenu de fond en français)
-- Vraies données GeoJSON pour `ObservationMap` (actuellement une carte schématique par position lat/lon normalisée, pas un tracé de côte réel)
-- Service worker pour un usage hors-ligne (mentionné dans la doctrine, pas encore implémenté)
 - Mettre à jour chaque année les informations d'événements associatifs (`associations.njk`, données à vérifier auprès des organisateurs)
+- Le chunk Leaflet (~44 Ko gzip) n'est chargé qu'au scroll sur la carte (`observer/`), mais reste le plus lourd du site ; envisager des tuiles vectorielles/un fournisseur plus léger si le budget JS devient un problème
 
 ## 📦 Build pour production
 

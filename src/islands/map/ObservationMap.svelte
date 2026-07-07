@@ -1,117 +1,81 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
+  import L from "leaflet";
+  import "leaflet/dist/leaflet.css";
 
   let { sites, locale } = $props();
 
-  let canvas = $state();
-  let activeId = $state(null);
-  let active = $derived(sites.find((s) => s.id === activeId) ?? null);
+  let mapContainer = $state();
+  let map;
 
-  let bounds = $derived.by(() => {
-    const lats = sites.map((s) => s.lat);
-    const lons = sites.map((s) => s.lon);
-    return {
-      minLat: Math.min(...lats) - 0.15,
-      maxLat: Math.max(...lats) + 0.15,
-      minLon: Math.min(...lons) - 0.15,
-      maxLon: Math.max(...lons) + 0.15,
-    };
-  });
-
-  function project(site, width, height) {
-    const x = ((site.lon - bounds.minLon) / (bounds.maxLon - bounds.minLon)) * width;
-    const y = height - ((site.lat - bounds.minLat) / (bounds.maxLat - bounds.minLat)) * height;
-    return { x, y };
-  }
-
-  function draw() {
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const dpr = window.devicePixelRatio || 1;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    ctx.scale(dpr, dpr);
-    ctx.clearRect(0, 0, width, height);
-
-    const styles = getComputedStyle(canvas);
-    const gold = styles.getPropertyValue("--gold-surface").trim() || "#e8c766";
-    const teal = styles.getPropertyValue("--caribbean-teal").trim() || "#3a9088";
-    const ink = styles.getPropertyValue("--ink-soft").trim() || "#888";
-
-    sites.forEach((site) => {
-      const { x, y } = project(site, width, height);
-      ctx.beginPath();
-      ctx.arc(x, y, site.id === activeId ? 9 : 6, 0, Math.PI * 2);
-      ctx.fillStyle = site.id === activeId ? teal : gold;
-      ctx.fill();
-
-      ctx.font = "12px sans-serif";
-      ctx.fillStyle = ink;
-      ctx.textAlign = x > width * 0.7 ? "right" : "left";
-      ctx.fillText(site.name, x + (x > width * 0.7 ? -12 : 12), y + 4);
+  function markerIcon(active) {
+    return L.divIcon({
+      className: "site-marker" + (active ? " site-marker-active" : ""),
+      iconSize: active ? [22, 22] : [16, 16],
+      iconAnchor: active ? [11, 11] : [8, 8],
     });
-  }
-
-  function pickSite(clientX, clientY) {
-    const rect = canvas.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-    let closest = null;
-    let closestDist = Infinity;
-    sites.forEach((site) => {
-      const p = project(site, rect.width, rect.height);
-      const dist = Math.hypot(p.x - x, p.y - y);
-      if (dist < closestDist) {
-        closestDist = dist;
-        closest = site;
-      }
-    });
-    if (closest && closestDist < 40) {
-      activeId = closest.id;
-      draw();
-    }
   }
 
   onMount(() => {
-    draw();
-    const onResize = () => draw();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    map = L.map(mapContainer, {
+      scrollWheelZoom: false,
+    });
+
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18,
+    }).addTo(map);
+
+    const markers = sites.map((site) => {
+      const marker = L.marker([site.lat, site.lon], { icon: markerIcon(false) }).addTo(map);
+      const desc = site[`description_${locale}`] ?? site.description_fr;
+      marker.bindPopup(
+        `<strong>${site.name}</strong><br>${desc}<br><small>${site.lat}°N, ${site.lon}°O — ${site.alt} m</small>`
+      );
+      marker.on("popupopen", () => marker.setIcon(markerIcon(true)));
+      marker.on("popupclose", () => marker.setIcon(markerIcon(false)));
+      return marker;
+    });
+
+    const group = L.featureGroup(markers);
+    map.fitBounds(group.getBounds().pad(0.2));
+  });
+
+  onDestroy(() => {
+    map?.remove();
   });
 </script>
 
 <div class="observation-map">
-  <canvas
-    bind:this={canvas}
-    class="island-canvas"
-    aria-label="Carte schématique des sites d'observation, cliquez sur un point pour voir ses détails"
-    tabindex="0"
-    onclick={(e) => pickSite(e.clientX, e.clientY)}
-  ></canvas>
-
-  {#if active}
-    <div class="card map-detail">
-      <h3>{active.name}</h3>
-      <p>{active[`description_${locale}`] ?? active.description_fr}</p>
-      <p style="color: var(--ink-soft); font-size: var(--text-0)">{active.lat}°N, {active.lon}°O — {active.alt} m</p>
-    </div>
-  {/if}
+  <div bind:this={mapContainer} class="leaflet-container-host" role="group" aria-label="Carte des sites d'observation de Sirius en Guadeloupe"></div>
 </div>
 
 <style>
-  .observation-map {
-    display: grid;
-    gap: var(--space-3);
+  .leaflet-container-host {
+    width: 100%;
+    height: 22rem;
+    border-radius: var(--radius-md);
+    overflow: hidden;
   }
 
-  .island-canvas {
-    cursor: pointer;
+  :global(.site-marker) {
+    background: var(--gold-surface);
+    border: 2px solid oklch(20% 0.03 265);
+    border-radius: 50%;
+    box-shadow: var(--shadow-sm);
   }
 
-  .map-detail h3 {
-    color: var(--gold);
-    margin-bottom: var(--space-2);
+  :global(.site-marker-active) {
+    background: var(--caribbean-teal);
+  }
+
+  :global(.leaflet-popup-content-wrapper) {
+    background: var(--surface-raised);
+    color: var(--ink);
+    border-radius: var(--radius-sm);
+  }
+
+  :global(.leaflet-popup-tip) {
+    background: var(--surface-raised);
   }
 </style>
