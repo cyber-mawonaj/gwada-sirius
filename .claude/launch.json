@@ -12,6 +12,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["eleventy", "--serve", "--port=8099"],
       "port": 8099
+    },
+    {
+      "name": "gwada-sirius-ghpages-sim",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "/tmp/gh-pages-sim", "-l", "8097"],
+      "port": 8097
     }
   ]
 }

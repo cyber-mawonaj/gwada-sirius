@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ pageTitle }} — {{ "meta_title" | t(locale) }}</title>
   <meta name="description" content="{{ 'meta_description' | t(locale) }}">
-  <link vite-ignore rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link vite-ignore rel="manifest" href="/manifest.webmanifest">
+  <link vite-ignore rel="icon" href="{{ '/favicon.svg' | withBase }}" type="image/svg+xml">
+  <link vite-ignore rel="manifest" href="{{ '/manifest.webmanifest' | withBase }}">
 
   {% for loc in locales %}
   <link vite-ignore rel="alternate" hreflang="{{ loc }}" href="{{ slug | localeHref(loc) }}">
   {% endfor %}
 
-  <link vite-ignore rel="preload" href="/assets/fonts/fraunces-variable.woff2" as="font" type="font/woff2" crossorigin>
-  <link vite-ignore rel="preload" href="/assets/fonts/atkinson-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link vite-ignore rel="preload" href="{{ '/assets/fonts/fraunces-variable.woff2' | withBase }}" as="font" type="font/woff2" crossorigin>
+  <link vite-ignore rel="preload" href="{{ '/assets/fonts/atkinson-400.woff2' | withBase }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/src/styles/app.css">
 </head>
 <body>
@@ -29,7 +29,7 @@
 
   <script>
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js"));
+      window.addEventListener("load", () => navigator.serviceWorker.register("{{ '/sw.js' | withBase }}"));
     }
   </script>
 </body>

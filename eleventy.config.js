@@ -7,6 +7,12 @@ import { locales, baseLocale } from "./src/paraglide/runtime.js";
 
 const OUTPUT_DIR = "_site";
 
+// GitHub Pages project sites are served under /<repo-name>/, not at the
+// domain root — set BASE_PATH (no trailing slash, e.g. "/gwada-sirius")
+// in CI to prefix internal links and Vite's own asset URLs accordingly.
+// Left empty for local dev and for a future custom-domain deployment.
+const BASE_PATH = (process.env.BASE_PATH || "").replace(/\/+$/, "");
+
 // Vite's build wipes the output dir (emptyOutDir) after 11ty has already
 // copied passthrough assets into it — re-copy them once Vite is done.
 // https://github.com/11ty/eleventy-plugin-vite/issues/42
@@ -42,6 +48,7 @@ export default function (eleventyConfig) {
           "/src": path.resolve(".", "src"),
         },
       },
+      base: BASE_PATH ? `${BASE_PATH}/` : "/",
       build: {
         emptyOutDir: false,
       },
@@ -65,10 +72,18 @@ export default function (eleventyConfig) {
   eleventyConfig.addGlobalData("baseLocale", baseLocale);
   eleventyConfig.addGlobalData("currentYear", () => new Date().getFullYear());
 
+  eleventyConfig.addGlobalData("basePath", BASE_PATH);
+
   eleventyConfig.addFilter("localeHref", (pagePath, locale) => {
     const clean = pagePath.replace(/^\/+/, "");
-    return locale === baseLocale ? `/${clean}` : `/${locale}/${clean}`;
+    const localePath = locale === baseLocale ? `/${clean}` : `/${locale}/${clean}`;
+    return BASE_PATH + localePath;
   });
+
+  // For static/passthrough assets referenced by absolute path outside of
+  // Vite's own bundling (favicon, manifest, service worker, font preloads —
+  // anything marked vite-ignore in layouts/base.njk).
+  eleventyConfig.addFilter("withBase", (assetPath) => BASE_PATH + assetPath);
 
   eleventyConfig.addFilter("dump", (value) => JSON.stringify(value).replace(/</g, "\\u003c"));
 
