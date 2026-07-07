@@ -17,3 +17,4 @@
 @import "./components/associations.css" layer(components);
 @import "./components/islands.css" layer(components);
 @import "./components/wave-badges.css" layer(components);
+@import "./components/comet-ring.css" layer(components);

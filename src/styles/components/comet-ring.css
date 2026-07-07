@@ -1,0 +1,40 @@
+/* Anneau comète — bordure en conic-gradient tournante, technique d'unabyss.com
+   (masque XOR pour ne garder que l'anneau). Respecte prefers-reduced-motion
+   via le kill-switch global de tokens.css (figé, anneau statique). */
+@property --comet-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.comet-ring {
+  position: relative;
+  isolation: isolate;
+}
+
+.comet-ring::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--comet-angle),
+    transparent 0deg,
+    transparent 250deg,
+    var(--gold-surface) 300deg,
+    var(--coral-surface) 330deg,
+    var(--gold-surface) 350deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: comet-spin 7s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes comet-spin {
+  to { --comet-angle: 360deg; }
+}
