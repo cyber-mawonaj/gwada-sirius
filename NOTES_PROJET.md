@@ -22,6 +22,7 @@ Refonte complète (v2) : passage d'une SPA Vite+Svelte 4 à un site **11ty** sta
 2. **Alias `/src`** : `eleventy-plugin-vite` fait tourner Vite avec pour racine une copie du dossier de **sortie** (`_site`), pas la racine du projet. Toute référence absolue à un fichier source (`/src/styles/app.css`, `/src/islands/.../mount.js`) nécessite l'alias `resolve.alias["/src"]` défini dans `eleventy.config.js`.
 3. **Dates ISO sans heure** : `new Date("2026-07-22")` est interprété en UTC ; formaté en heure locale Guadeloupe (UTC-4), ça peut reculer d'un jour. Toujours parser les composants (`year, month, day`) et construire la date en local — voir le filtre `formatDate` et `PredictionsCalculator.svelte`.
 4. **Slinkity est abandonné** (son créateur travaille sur Astro) : ne pas l'utiliser pour l'intégration 11ty+Svelte, `eleventy-plugin-vite` (officiel) est la voie robuste.
+5. **Service worker et cache obsolète** : la stratégie stale-while-revalidate de `public/sw.js` peut servir une version périmée des îlots (vécu pendant le debug de la carte : un visiteur déjà passé sur le site voyait l'ancien composant malgré un déploiement). **Toujours incrémenter `CACHE_NAME` dans `sw.js`** quand un îlot ou un asset critique change, sinon les visiteurs récurrents restent bloqués sur l'ancienne version jusqu'à revalidation.
 
 ## 🔄 Améliorations possibles
 

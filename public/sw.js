@@ -1,6 +1,6 @@
 // Service worker minimal : résilience réseau (3G/4G irrégulier) et usage
 // hors-ligne des pages déjà visitées. Stratégie stale-while-revalidate.
-const CACHE_NAME = "gwada-sirius-v1";
+const CACHE_NAME = "gwada-sirius-v2";
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();

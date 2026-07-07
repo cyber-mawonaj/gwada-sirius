@@ -1,107 +1,81 @@
 <script>
-  import { onMount } from "svelte";
-  import { worldData, waveCities } from "./world.js";
+  import { onMount, onDestroy } from "svelte";
+  import L from "leaflet";
+  import "leaflet/dist/leaflet.css";
+  import { waveCities } from "./world.js";
 
-  let canvas = $state();
-  let activeCity = $state(null);
+  let mapContainer = $state();
+  let map;
 
-  function project(lon, lat, width, height) {
-    const x = ((lon + 180) / 360) * width;
-    const y = ((90 - lat) / 180) * height;
-    return { x, y };
-  }
-
-  function draw() {
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const dpr = window.devicePixelRatio || 1;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    ctx.scale(dpr, dpr);
-    ctx.clearRect(0, 0, width, height);
-
-    const styles = getComputedStyle(canvas);
-    const gold = styles.getPropertyValue("--gold-surface").trim() || "#e8c766";
-    const teal = styles.getPropertyValue("--caribbean-teal").trim() || "#3a9088";
-    const border = styles.getPropertyValue("--border").trim() || "#333";
-
-    ctx.fillStyle = border;
-    worldData.features.forEach((feature) => {
-      ctx.beginPath();
-      feature.geometry.coordinates[0].forEach(([lon, lat], i) => {
-        const { x, y } = project(lon, lat, width, height);
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      });
-      ctx.closePath();
-      ctx.fill();
+  function markerIcon(active) {
+    return L.divIcon({
+      className: "wave-marker" + (active ? " wave-marker-active" : ""),
+      iconSize: active ? [20, 20] : [14, 14],
+      iconAnchor: active ? [10, 10] : [7, 7],
     });
-
-    waveCities.forEach((city) => {
-      const { x, y } = project(city.lon, city.lat, width, height);
-      ctx.beginPath();
-      ctx.arc(x, y, city.name === activeCity?.name ? 7 : 4, 0, Math.PI * 2);
-      ctx.fillStyle = city.name === "Guadeloupe" || city.name === "Martinique" ? gold : teal;
-      ctx.fill();
-    });
-  }
-
-  function pickCity(clientX, clientY) {
-    const rect = canvas.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-    let closest = null;
-    let closestDist = Infinity;
-    waveCities.forEach((city) => {
-      const p = project(city.lon, city.lat, rect.width, rect.height);
-      const dist = Math.hypot(p.x - x, p.y - y);
-      if (dist < closestDist) {
-        closestDist = dist;
-        closest = city;
-      }
-    });
-    activeCity = closestDist < 30 ? closest : null;
-    draw();
   }
 
   onMount(() => {
-    draw();
-    const onResize = () => draw();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    map = L.map(mapContainer, { scrollWheelZoom: false });
+
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18,
+    }).addTo(map);
+
+    const markers = waveCities.map((city) => {
+      const isCaribbean = city.name === "Guadeloupe" || city.name === "Martinique";
+      const marker = L.marker([city.lat, city.lon], {
+        icon: markerIcon(isCaribbean),
+      }).addTo(map);
+      marker.bindPopup(`<strong>${city.name}</strong><br>${city.date}`);
+      marker.on("popupopen", () => marker.setIcon(markerIcon(true)));
+      marker.on("popupclose", () => marker.setIcon(markerIcon(isCaribbean)));
+      return marker;
+    });
+
+    const group = L.featureGroup(markers);
+    map.fitBounds(group.getBounds().pad(0.15));
+  });
+
+  onDestroy(() => {
+    map?.remove();
   });
 </script>
 
-<div class="sirius-globe">
-  <canvas
-    bind:this={canvas}
-    class="island-canvas"
-    aria-label="Carte de la progression du lever héliaque à travers l'Afrique et les Caraïbes, touchez une ville pour voir sa date"
-    tabindex="0"
-    onmousemove={(e) => pickCity(e.clientX, e.clientY)}
-    onmouseleave={() => { activeCity = null; draw(); }}
-    onclick={(e) => pickCity(e.clientX, e.clientY)}
-  ></canvas>
-  <p class="globe-caption" aria-live="polite">
-    {#if activeCity}
-      <strong>{activeCity.name}</strong> — {activeCity.date}
-    {:else}
-      &nbsp;
-    {/if}
-  </p>
-</div>
+<div
+  bind:this={mapContainer}
+  class="wave-map"
+  role="group"
+  aria-label="Carte de la progression du lever héliaque à travers l'Afrique et les Caraïbes"
+></div>
 
 <style>
-  .island-canvas {
-    cursor: crosshair;
+  .wave-map {
+    width: 100%;
+    height: 22rem;
+    border-radius: var(--radius-md);
+    overflow: hidden;
   }
 
-  .globe-caption {
-    text-align: center;
-    min-height: 1.5em;
-    color: var(--gold);
-    font-weight: 600;
+  :global(.wave-marker) {
+    background: var(--caribbean-teal);
+    border: 2px solid oklch(20% 0.03 265);
+    border-radius: 50%;
+    box-shadow: var(--shadow-sm);
+  }
+
+  :global(.wave-marker-active) {
+    background: var(--gold-surface);
+  }
+
+  :global(.leaflet-popup-content-wrapper) {
+    background: var(--surface-raised);
+    color: var(--ink);
+    border-radius: var(--radius-sm);
+  }
+
+  :global(.leaflet-popup-tip) {
+    background: var(--surface-raised);
   }
 </style>
