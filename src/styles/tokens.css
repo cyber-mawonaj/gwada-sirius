@@ -5,8 +5,13 @@
      Deux thèmes conceptuellement liés au sujet : Aube (clair) / Nuit (sombre).
      Le noir de nuit est volontairement presque neutre (chroma minimal) —
      un "premium near-black" plutôt qu'un bleu nuit saturé. */
+  /* Hiérarchie de texte à 4 niveaux (inspirée de la granularité observée
+     chez unabyss.com — text/secondary/tertiary/muted...) : primaire, atténué,
+     discret (métadonnées : coordonnées GPS, légendes), fantôme (à peine là). */
   --ink: light-dark(oklch(23% 0.03 265), oklch(96% 0.01 85));
   --ink-soft: light-dark(oklch(38% 0.03 265), oklch(78% 0.015 85));
+  --ink-dim: light-dark(oklch(52% 0.02 265), oklch(60% 0.015 85));
+  --ink-ghost: light-dark(oklch(68% 0.015 265), oklch(42% 0.015 85));
   --surface: light-dark(oklch(96% 0.015 85), oklch(11% 0.012 265));
   --surface-raised: light-dark(oklch(99% 0.008 85), oklch(15% 0.015 265));
   --surface-sunk: light-dark(oklch(91% 0.02 85), oklch(8% 0.012 265));
@@ -15,6 +20,14 @@
   /* Or de Sirius : variante lisible (texte/liens) + variante décorative (glows) */
   --gold: light-dark(oklch(45% 0.15 75), oklch(82% 0.15 87));
   --gold-surface: oklch(80% 0.16 85);
+  /* Lavis dorés pré-mélangés : fonds/bordures teintés sans color-mix() ad hoc
+     dispersé dans chaque fichier — deux intensités suffisent à nos usages. */
+  --gold-wash-subtle: light-dark(oklch(94% 0.025 85), oklch(24% 0.03 85));
+  --gold-wash: light-dark(oklch(90% 0.05 85), oklch(28% 0.05 85));
+  /* Vocabulaire de lueur, distinct d'une ombre générique : douce pour un
+     texte/accent au repos, forte pour un état actif/sélectionné. */
+  --glow-soft: 0 0 20px light-dark(oklch(80% 0.15 87 / 20%), oklch(82% 0.15 87 / 30%));
+  --glow-strong: 0 0 30px light-dark(oklch(80% 0.15 87 / 35%), oklch(82% 0.15 87 / 55%));
   /* Corail (héritage Caraïbe du v1 du projet) : accent secondaire chaud,
      à côté de l'or plutôt qu'à sa place — inspiré du ton "burnt orange"
      d'unabyss.com. */

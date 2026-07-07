@@ -14,8 +14,8 @@
 }
 
 .card.info-card.essential {
-  box-shadow: 0 0 0 2px var(--gold), var(--shadow-sm);
-  background: light-dark(oklch(96% 0.04 85), oklch(20% 0.035 85));
+  box-shadow: 0 0 0 2px var(--gold), var(--glow-soft), var(--shadow-sm);
+  background: var(--gold-wash);
 }
 
 .info-card-header {

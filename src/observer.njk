@@ -70,7 +70,7 @@ eleventyComputed:
         <li class="card">
           <h3>{{ site.name }}</h3>
           <p>{{ site["description_" + locale] or site.description_fr }}</p>
-          <p style="font-size: var(--text-0); color: var(--ink-soft)">{{ site.lat }}°N, {{ site.lon }}°O — {{ site.alt }} m</p>
+          <p style="font-size: var(--text-0); color: var(--ink-dim)">{{ site.lat }}°N, {{ site.lon }}°O — {{ site.alt }} m</p>
         </li>
         {% endfor %}
       </ul>

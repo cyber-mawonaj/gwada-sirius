@@ -60,6 +60,7 @@
   background: var(--gold-surface);
   border-color: var(--gold-surface);
   color: oklch(20% 0.03 265);
+  box-shadow: var(--glow-strong);
 }
 
 @media (max-width: 47.99em) {

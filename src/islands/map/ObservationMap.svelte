@@ -30,7 +30,7 @@
       const marker = L.marker([site.lat, site.lon], { icon: markerIcon(false) }).addTo(map);
       const desc = site[`description_${locale}`] ?? site.description_fr;
       marker.bindPopup(
-        `<strong>${site.name}</strong><br>${desc}<br><small>${site.lat}°N, ${site.lon}°O — ${site.alt} m</small>`
+        `<strong>${site.name}</strong><br>${desc}<br><small style="color: var(--ink-dim)">${site.lat}°N, ${site.lon}°O — ${site.alt} m</small>`
       );
       marker.on("popupopen", () => marker.setIcon(markerIcon(true)));
       marker.on("popupclose", () => marker.setIcon(markerIcon(false)));
