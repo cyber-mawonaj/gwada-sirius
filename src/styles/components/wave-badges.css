@@ -1,0 +1,32 @@
+/* Vitrine dense de badges — écho panafricain à une grille d'intégrations :
+   sobre en soi (fond neutre), colorée par petites touches. */
+.wave-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+  list-style: none;
+}
+
+.wave-badge {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--surface-raised);
+  font-size: var(--text-0);
+}
+
+.wave-badge-name {
+  font-weight: 700;
+}
+
+.wave-badge-date {
+  color: var(--ink-soft);
+}
+
+.wave-badge-0 .wave-badge-name { color: var(--gold); }
+.wave-badge-1 .wave-badge-name { color: var(--coral); }
+.wave-badge-2 .wave-badge-name { color: var(--caribbean-teal); }

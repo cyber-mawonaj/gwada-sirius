@@ -1,6 +1,10 @@
+/* Contenu éditorial : icône + titre + texte, fluide (pas de boîte) sauf
+   quand .card est explicitement combiné (regroupements fonctionnels comme
+   l'équipement d'observation). */
 .feature-card,
 .info-card {
   text-align: center;
+  padding-block: var(--space-2);
 }
 
 .feature-card h3,
@@ -9,9 +13,9 @@
   margin-bottom: var(--space-2);
 }
 
-.info-card.essential {
-  border-color: var(--gold);
-  background: light-dark(oklch(96% 0.04 85), oklch(24% 0.04 85));
+.card.info-card.essential {
+  box-shadow: 0 0 0 2px var(--gold), var(--shadow-sm);
+  background: light-dark(oklch(96% 0.04 85), oklch(20% 0.035 85));
 }
 
 .info-card-header {

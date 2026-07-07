@@ -16,3 +16,4 @@
 @import "./components/diagrams.css" layer(components);
 @import "./components/associations.css" layer(components);
 @import "./components/islands.css" layer(components);
+@import "./components/wave-badges.css" layer(components);

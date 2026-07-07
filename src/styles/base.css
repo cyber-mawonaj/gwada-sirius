@@ -37,13 +37,14 @@ body {
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
   text-wrap: balance;
 }
 
 h1 { font-size: var(--text-6); }
 h2 { font-size: var(--text-5); }
-h3 { font-size: var(--text-3); }
-h4 { font-size: var(--text-2); }
+h3 { font-size: var(--text-3); letter-spacing: -0.01em; }
+h4 { font-size: var(--text-2); letter-spacing: 0; }
 
 p {
   text-wrap: pretty;

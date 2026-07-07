@@ -53,12 +53,18 @@
 }
 
 .section {
-  padding-block: var(--space-7);
+  padding-block: var(--space-8);
   container-type: inline-size;
 }
 
 .section-header {
   margin-bottom: var(--space-6);
+}
+
+.hairline {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
 }
 
 .section-eyebrow {
@@ -78,9 +84,11 @@
   margin-top: var(--space-2);
 }
 
+/* Réservé aux regroupements fonctionnels (calculateur, carte, onglets,
+   équipement) — le contenu purement éditorial reste fluide, sans boîte. */
 .card {
   background: var(--surface-raised);
-  border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
 }
