@@ -38,3 +38,6 @@ Thumbs.db
 *.tmp
 *.temp
 .cache/
+# Mémo local (infra, ne pas pousser)
+GITEA.md
+qa.tmp.mjs

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://cyber-mawonaj.github.io/gwada-sirius/sitemap.xml

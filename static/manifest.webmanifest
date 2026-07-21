@@ -1,0 +1,10 @@
+{
+	"name": "Sirius en Guadeloupe — Wep Ronpet",
+	"short_name": "Sirius Gwada",
+	"description": "Lever héliaque de Sirius en Guadeloupe : astronomie, culture et observation.",
+	"start_url": ".",
+	"display": "standalone",
+	"background_color": "#141a33",
+	"theme_color": "#141a33",
+	"icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

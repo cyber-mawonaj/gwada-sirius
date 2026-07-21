@@ -13,40 +13,44 @@ Ce site permet de :
 
 ## 🚀 Stack technique
 
-- **[11ty (Eleventy)](https://www.11ty.dev/)** — génération du site statique, contenu et navigation en HTML/CSS, fonctionnel sans JavaScript
-- **[Svelte 5](https://svelte.dev/)** en îlots — hydratation ciblée pour les 3 seuls widgets interactifs (calculateur de prédictions, carte d'observation, globe de la vague planétaire), via `@11ty/eleventy-plugin-vite`
-- **[Paraglide (inlang)](https://paraglidejs.com/)** — i18n compilée, FR (défaut) / EN / Kreyòl Ayisyen, routée par URL (`/`, `/en/`, `/ht/`)
-- **CSS natif** — tokens `oklch()`, cascade `@layer`, container queries, aucun framework CSS ni préprocesseur
-- Polices auto-hébergées (Fraunces, Atkinson Hyperlegible), zéro dépendance à Google Fonts
+Version 3, reconstruite avec **[SvelteKit 2 + Svelte 5 (runes) + TypeScript](https://svelte.dev/)**, entièrement pré-rendue en statique (`adapter-static`). L'ancienne version 11ty est conservée sur la branche `main`.
 
-Conforme à la doctrine UI/UX OKI (voir document de référence interne) : navigation à 5 entrées, cibles tactiles ≥ 48 px, contraste AA/AAA, `prefers-reduced-motion` respecté, budget JS minimal.
+- **SvelteKit statique** — tout le contenu éditorial fonctionne sans JavaScript ; les 3 widgets (calculateur, carte, globe) sont des composants Svelte natifs avec fallback SSR (plus d'îlots montés à la main)
+- **i18n maison** — les catalogues au format Paraglide/inlang (`src/lib/i18n/{fr,en,ht}.json`, éditables avec les outils inlang) consommés par un routeur par dossiers : FR à `/`, EN sur `/en/`, Kreyòl sur `/ht/` (retombe sur le fr pour le contenu long)
+- **CSS natif** — tokens `oklch()`, cascade `@layer`, container queries, aucun framework
+- **Leaflet** en import dynamique côté client uniquement (tuiles OSM — exception documentée à la règle zéro-tiers)
+- Polices auto-hébergées (Fraunces, Atkinson Hyperlegible), zéro Google Fonts
+- **PWA** : manifest + service worker stale-while-revalidate (`src/service-worker.js`, incrémenter `CACHE_NAME` à chaque évolution)
+- **SEO** : canonical, hreflang ×3 + x-default, Open Graph, Twitter Cards (`src/lib/components/Seo.svelte`), `robots.txt` + `sitemap.xml` (15 URLs)
+
+Conforme à la doctrine UI/UX OKI : navigation à 5 entrées, cibles tactiles ≥ 48 px, contraste AA/AAA, `prefers-reduced-motion` respecté, budget JS minimal.
 
 ## 📦 Installation
 
 ```bash
 npm install
-npm run dev      # serveur de développement sur http://localhost:8080
-npm run build    # build de production dans _site/
-npm run preview  # prévisualiser le build de production
+npm run dev      # http://localhost:5173/gwada-sirius/
+npm run build    # build de production dans build/
+npm run preview  # prévisualiser le build
+npm run check    # types + accessibilité (svelte-check)
 ```
 
 ## 🗂️ Structure
 
 ```
 src/
-├── _data/            # données globales (sites d'observation, navigation)
-├── _includes/         # layout de base, partiels (nav, footer)
-├── styles/            # design system CSS (tokens, reset, base, layouts, composants)
-├── islands/           # composants Svelte 5 hydratés côté client (prédictions, carte, globe)
-├── paraglide/         # messages i18n compilés (généré, ignoré par git)
-├── index.njk          # accueil
-├── sirius-science.njk # astronomie + méthode de calcul
-├── culture-savoirs.njk# héritage culturel + savoir dogon
-├── observer.njk        # calculateur, carte, guide d'observation
-└── associations.njk    # associations qui fêtent le Wep Ronpet
-messages/               # catalogues de traduction (fr/en/ht), source pour Paraglide
-project.inlang/         # configuration du projet i18n
+├── lib/
+│   ├── i18n/           # catalogues fr/en/ht (format Paraglide) + routeur localisé
+│   ├── data/           # sites d'observation, villes de la vague, prochain lever, nav
+│   ├── styles/         # design system CSS (tokens, base, layouts, composants, thème oki)
+│   ├── components/     # Nav, Footer, Seo, pages/ (une par page), islands/ (3 widgets)
+│   └── dates.ts        # formatage local des dates (piège UTC-4, voir NOTES_PROJET)
+├── routes/             # / (fr), en/, ht/ — 5 pages par locale
+└── service-worker.js   # PWA (stale-while-revalidate)
+static/                 # favicon.svg, manifest.webmanifest, robots.txt, sitemap.xml, fonts/
 ```
+
+Le déploiement GitHub Pages (sous-répertoire `/gwada-sirius/`) est géré par `paths.base` dans `svelte.config.js` + `.github/workflows/deploy.yml`.
 
 ## 👥 Crédits
 
